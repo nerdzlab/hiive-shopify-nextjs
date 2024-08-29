@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const session = await verifyRequest(req, true);
   const text = await req.json();
+
   if (!session) {
     throw new Error("No sesssion found.");
   }
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     if (error instanceof GraphqlQueryError) {
-      console.log(JSON.stringify(error.response));
+      console.log("err", error.body?.errors.graphQLErrors);
       return new NextResponse(
         JSON.stringify({ errors: error.body?.errors.graphQLErrors }),
         {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
         },
       );
     } else if (error instanceof Error) {
+      console.log("error.message", error.message);
       return new Response(JSON.stringify(error.message), {
         status: 500,
         headers: {

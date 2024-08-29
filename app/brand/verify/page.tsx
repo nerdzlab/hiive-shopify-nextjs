@@ -26,6 +26,8 @@ import { useRouter } from "next/navigation";
 import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
 import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
+import { useLazyQuery } from "@apollo/client";
+import { graphql } from "@/lib/gql";
 
 type FormValues = {
   person?: string;
@@ -67,8 +69,20 @@ const validationSchema = yup.object().shape({
   brandName: yup.string().required("Person is required"),
 });
 
+const GET_SHOP = graphql(`
+  #graphql
+  query getShop {
+    shop {
+      name
+    }
+  }
+`);
+
 export default function NewPage() {
   const router = useRouter();
+  const [getShop] = useLazyQuery(GET_SHOP, {
+    fetchPolicy: "network-only",
+  });
   const token = useRecoilValue(userToken);
   const [errors, setErrors] = useState<FormValues>({});
   const [loading, toggleLoading] = useBoolean();

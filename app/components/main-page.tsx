@@ -185,7 +185,7 @@ export default function Home({ shop }: { shop: string }) {
           Use Shopify App Bridge to interact with the Shopify admin. The request
           uses online session tokens. This uses Shopify App Bridge v4.
         </Text>
-        <Link href="/new">New page using next/link</Link>
+        <Link href="/login">New page using next/link</Link>
       </Card>
     </Page>
   );

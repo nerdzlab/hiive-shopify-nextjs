@@ -3,7 +3,7 @@
 client_id = "ffacefe4447fd2251711b492d822502d"
 name = "hiive-test"
 handle = "hiive-test"
-application_url = "https://pl-collaboration-dee-versus.trycloudflare.com"
+application_url = "https://consulting-bought-avoid-pasta.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://pl-collaboration-dee-versus.trycloudflare.com/auth/callback",
-  "https://pl-collaboration-dee-versus.trycloudflare.com/auth/shopify/callback",
-  "https://pl-collaboration-dee-versus.trycloudflare.com/api/auth/callback"
+  "https://consulting-bought-avoid-pasta.trycloudflare.com/auth/callback",
+  "https://consulting-bought-avoid-pasta.trycloudflare.com/auth/shopify/callback",
+  "https://consulting-bought-avoid-pasta.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
