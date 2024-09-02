@@ -3,7 +3,7 @@
 client_id = "ffacefe4447fd2251711b492d822502d"
 name = "hiive-test"
 handle = "hiive-test"
-application_url = "https://laos-fd-disabilities-reach.trycloudflare.com"
+application_url = "https://morrison-definitions-itself-oxford.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://laos-fd-disabilities-reach.trycloudflare.com/auth/callback",
-  "https://laos-fd-disabilities-reach.trycloudflare.com/auth/shopify/callback",
-  "https://laos-fd-disabilities-reach.trycloudflare.com/api/auth/callback"
+  "https://morrison-definitions-itself-oxford.trycloudflare.com/auth/callback",
+  "https://morrison-definitions-itself-oxford.trycloudflare.com/auth/shopify/callback",
+  "https://morrison-definitions-itself-oxford.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -11,7 +11,7 @@ import {
   Form,
 } from "@shopify/polaris";
 import { ChevronLeftIcon } from "@shopify/polaris-icons";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 import * as yup from "yup";
@@ -41,7 +41,6 @@ const ResendButton = ({
   setRequestId: (requestId: string) => void;
   requestId: string;
 }) => {
-  const searchParams = useSearchParams();
   const [secondsLeft, setSecondsLeft] = useState(0);
 
   const onCodeResend = async () => {
@@ -82,7 +81,7 @@ const ResendButton = ({
   );
 };
 
-export default function NewPage() {
+function NewPage() {
   const setToken = useSetRecoilState(userToken);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -188,3 +187,11 @@ export default function NewPage() {
     </Page>
   );
 }
+
+const LoginVerifyEmailPage = () => (
+  <Suspense>
+    <NewPage />
+  </Suspense>
+);
+
+export default LoginVerifyEmailPage;
