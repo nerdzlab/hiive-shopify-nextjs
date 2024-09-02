@@ -23,8 +23,9 @@ import {
 import { useBoolean } from "@/hooks";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { userToken } from "@/atoms/token";
+import { BrandApprovalStatus } from "@/types/Brand";
 
-export const validationSchema = yup.object().shape({
+const validationSchema = yup.object().shape({
   code: yup
     .string()
     .required()
@@ -33,7 +34,13 @@ export const validationSchema = yup.object().shape({
     .max(5, "Must be exactly 5 digits"),
 });
 
-const ResendButton = ({ setRequestId, requestId }) => {
+const ResendButton = ({
+  setRequestId,
+  requestId,
+}: {
+  setRequestId: (requestId: string) => void;
+  requestId: string;
+}) => {
   const searchParams = useSearchParams();
   const [secondsLeft, setSecondsLeft] = useState(0);
 
@@ -79,7 +86,9 @@ export default function NewPage() {
   const setToken = useSetRecoilState(userToken);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [requestId, setRequestId] = useState(searchParams.get("requestId"));
+  const [requestId, setRequestId] = useState(
+    searchParams.get("requestId") || "",
+  );
   const [textFieldValue, setTextFieldValue] = useState("");
   const [errors, setErrors] = useState<{ code?: string }>({});
   const [loading, toggle] = useBoolean();
@@ -98,13 +107,23 @@ export default function NewPage() {
       });
 
       setToken(response.data.accessToken);
-      router.push("/brand/verify");
+
+      if (response.data?.approvalStatus === BrandApprovalStatus.Approved) {
+        router.push("/brand/verify");
+      } else {
+        router.push("/inventory");
+      }
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        const errors = error.inner.reduce((acc, err) => {
-          acc[err.path] = err.message;
-          return acc;
-        }, {});
+        const errors = error.inner.reduce<{ [key: string]: string }>(
+          (acc, err) => {
+            if (err.path) {
+              acc[err.path] = err.message;
+            }
+            return acc;
+          },
+          {},
+        );
         setErrors(errors);
       }
     }

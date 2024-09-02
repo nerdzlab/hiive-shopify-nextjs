@@ -1,7 +1,7 @@
 "use client";
 import { swrFetcher } from "@/app/api/swrFetcher";
 import { userToken } from "@/atoms/token";
-import { BrandApprovalStatus } from "@/types/Brand";
+import { Brand, BrandApprovalStatus } from "@/types/Brand";
 import {
   Page,
   Text,
@@ -73,11 +73,15 @@ const BrandReviewStatus = ({ status }: { status: BrandApprovalStatus }) => {
 
 export default function BrandForm() {
   const token = useRecoilValue(userToken);
-  const { data, error, isLoading } = useSWR(["/brand/me", token], swrFetcher, {
-    shouldRetryOnError: false,
-  });
+  const { data, error, isLoading } = useSWR<Brand>(
+    ["/brand/me", token],
+    swrFetcher,
+    {
+      shouldRetryOnError: false,
+    },
+  );
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return null;
   }
 
@@ -101,7 +105,7 @@ export default function BrandForm() {
                   <Thumbnail
                     size="large"
                     transparent
-                    source={data?.brandLogoUrl}
+                    source={data?.brandLogoUrl as string}
                     alt="Black choker necklace"
                   />
                 </div>
@@ -109,7 +113,7 @@ export default function BrandForm() {
                   <Text variant="headingMd" as="h6" alignment="center">
                     Status of the {data?.brandName} Application
                   </Text>
-                  <BrandReviewStatus status={data?.approvalStatus} />
+                  <BrandReviewStatus status={data.approvalStatus} />
                 </BlockStack>
               </BlockStack>
             </div>

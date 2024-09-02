@@ -16,7 +16,7 @@ import { postSendEmail } from "../api/services/Auth.service";
 import { useBoolean } from "@/hooks";
 import { redirect, useRouter } from "next/navigation";
 
-export const validationSchema = yup.object().shape({
+const validationSchema = yup.object().shape({
   email: yup
     .string()
     .email("Invalid email address")
@@ -47,10 +47,15 @@ export default function NewPage() {
       router.push(`/login/verify-email?requestId=${response.data?.requestId}`);
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        const errors = error.inner.reduce((acc, err) => {
-          acc[err.path] = err.message;
-          return acc;
-        }, {});
+        const errors = error.inner.reduce<{ [key: string]: string }>(
+          (acc, err) => {
+            if (err.path) {
+              acc[err.path] = err.message;
+            }
+            return acc;
+          },
+          {},
+        );
         setErrors(errors);
       }
     }

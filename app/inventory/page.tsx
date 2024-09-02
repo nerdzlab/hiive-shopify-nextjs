@@ -1,3 +1,4 @@
+// @ts-nocheck // TODO because of api changes for now we need this
 "use client";
 import {
   IndexTable,
@@ -6,68 +7,20 @@ import {
   Page,
   Card,
   BlockStack,
-  InlineGrid,
-  Collapsible,
-  Text,
-  TextField,
-  Badge,
   Spinner,
 } from "@shopify/polaris";
-import { useCallback, useMemo, useState } from "react";
-import InventoryFilters from "../components/InventoryFilters";
+import { useMemo, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { graphql } from "@/lib/gql";
-import useSWR from "swr";
 import { useRecoilValue } from "recoil";
+import useSWR from "swr";
+
 import { userToken } from "@/atoms/token";
 import { swrFetcher } from "../api/swrFetcher";
-import { PublishStatus } from "@/types/Product";
 import { PublishProductModal } from "./PublishProductModal";
 
-function CardWithHeaderActions() {
-  const [open, setOpen] = useState(true);
-
-  const handleToggle = useCallback(() => setOpen((open) => !open), []);
-
-  return (
-    <Card roundedAbove="sm">
-      <BlockStack gap="200">
-        <InlineGrid columns="1fr auto">
-          <Text as="h2" variant="headingSm">
-            Filters
-          </Text>
-          <Button
-            fullWidth
-            textAlign="left"
-            disclosure={open ? "up" : "down"}
-            onClick={handleToggle}
-          >
-            {open ? "Hide filters" : "Show filters"}
-          </Button>
-        </InlineGrid>
-        <Collapsible
-          open={open}
-          id="basic-collapsible"
-          transition={{ duration: "250ms", timingFunction: "ease-in-out" }}
-          expandOnPrint
-        >
-          <BlockStack gap="500">
-            <TextField
-              label=""
-              placeholder="Searching in all"
-              type="number"
-              // value={textFieldValue}
-              // onChange={handleTextFieldChange}
-              prefix="$"
-              autoComplete="off"
-            />
-            <InventoryFilters />
-          </BlockStack>
-        </Collapsible>
-      </BlockStack>
-    </Card>
-  );
-}
+import { CardWithHeaderActions } from "./CardWithHeaderActions";
+import { InventoryTable } from "./Table";
+import { ITEMS_PER_PAGE } from "./utils";
 
 const GET_PRODUCTS = gql`
   query GetProducts($first: Int!) {
@@ -99,42 +52,9 @@ const aggregateItems = (syncItems, shopifyItems) =>
     return { ...shopifyItem, status: item?.status };
   });
 
-const ProductStatusBadge = ({ status }) => {
-  if (status === PublishStatus.Published) {
-    return <Badge tone="success">Published</Badge>;
-  }
-  if (status === PublishStatus.Unpublished) {
-    return <Badge>Not published</Badge>;
-  }
-  if (status === PublishStatus.PublishRequested) {
-    return <Badge tone="warning">Pending for publish</Badge>;
-  }
-  return <Badge tone="critical">Rejected</Badge>;
-};
-
-const ProductActionButton = ({ status }) => {
-  if (
-    status === PublishStatus.Unpublished ||
-    status === PublishStatus.Rejected
-  ) {
-    return (
-      <Button
-        onClick={() => {
-          console.log(document.getElementById("my-modal"));
-          document.getElementById("my-modal").show();
-        }}
-        variant="primary"
-        size="large"
-      >
-        Publish
-      </Button>
-    );
-  }
-
-  return <Button size="large">Unpublish</Button>;
-};
 export default function Products() {
   const token = useRecoilValue(userToken);
+  const [currentPage, setCurrentPage] = useState(1);
   const { data, loading, error } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "network-only",
     variables: { first: 10 },
@@ -149,15 +69,13 @@ export default function Products() {
     },
   );
 
-  const items = useMemo(() => {
-    if (!data || !productsList) {
-      return [];
-    }
+  const handlePageChange = (newPage: number) => setCurrentPage(newPage);
 
+  const items = useMemo(() => {
+    if (!data || !productsList) return [];
     return aggregateItems(productsList, data?.products?.nodes);
   }, [productsList, data]);
-
-  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(items?.length / ITEMS_PER_PAGE);
 
   if (loading) {
     return (
@@ -174,38 +92,6 @@ export default function Products() {
     );
   }
 
-  const itemsPerPage = 5;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const currentItems = items.slice(startIndex, endIndex);
-
-  const totalPages = Math.ceil(items?.length / itemsPerPage);
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-  console.log(currentItems);
-  const rowMarkup = currentItems.map(({ image, id, title, status }, index) => (
-    <IndexTable.Row id={id} key={id} position={index}>
-      <IndexTable.Cell>
-        <img height={"40px"} src={image?.src} />{" "}
-      </IndexTable.Cell>
-      <IndexTable.Cell>{title}</IndexTable.Cell>
-      <IndexTable.Cell>$22</IndexTable.Cell>
-      <IndexTable.Cell>3 in stock</IndexTable.Cell>
-      <IndexTable.Cell>
-        <ProductStatusBadge status={status} />
-      </IndexTable.Cell>
-      <IndexTable.Cell>$21.99</IndexTable.Cell>
-      <IndexTable.Cell>sku</IndexTable.Cell>
-      <IndexTable.Cell>30%</IndexTable.Cell>
-      <IndexTable.Cell>
-        <ProductActionButton status={status} />
-      </IndexTable.Cell>
-    </IndexTable.Row>
-  ));
-
   return (
     <Page
       title="Inventory"
@@ -215,23 +101,7 @@ export default function Products() {
         <CardWithHeaderActions />
         <PublishProductModal />
         <Card>
-          <IndexTable
-            itemCount={data.products?.nodes?.length}
-            headings={[
-              { title: "Picture" },
-              { title: "Product Title" },
-              { title: "Product Price" },
-              { title: "Amount" },
-              { title: "Status" },
-              { title: "COGS" },
-              { title: "SKU" },
-              { title: "Discount" },
-              { title: "Action" },
-            ]}
-            selectable={false}
-          >
-            {rowMarkup}
-          </IndexTable>
+          <InventoryTable currentPage={currentPage} items={items} />
 
           <div className="polaris-btn">
             <ButtonGroup segmented>

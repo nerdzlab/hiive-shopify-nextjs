@@ -20,27 +20,20 @@ export default function InventoryFilters() {
     <FormLayout>
       <FormLayout>
         <FormLayout.Group condensed>
-          <Select
-            labelHidden
-            label="Collection rule type"
-            options={["Pending for publish", "Not published", "Rejected"]}
-            value={selectTypeValue}
-            onChange={handleSelectTypeChange}
-          />
-          <Select
-            labelHidden
-            label="Collection rule condition"
-            options={["0-10", "10-50", "50-100", "100-1000"]}
-            value={selectConditionValue}
-            onChange={handleSelectConditionChange}
-          />
-          <Select
-            labelHidden
-            label="Collection rule condition"
-            options={["Bigger first", "Smaller first"]}
-            value={selectConditionValue}
-            onChange={handleSelectConditionChange}
-          />
+          <div className="max-w-[50%] flex [&>div]:mr-4 [&>div]:w-[45%]">
+            <Select
+              label="Status"
+              options={["Pending for publish", "Not published", "Rejected"]}
+              value={selectTypeValue}
+              onChange={handleSelectTypeChange}
+            />
+            <Select
+              label="Amount"
+              options={["0-10", "10-50", "50-100", "100-1000"]}
+              value={selectConditionValue}
+              onChange={handleSelectConditionChange}
+            />
+          </div>
         </FormLayout.Group>
         <InlineStack gap="400">
           <Button size="large" variant="primary">

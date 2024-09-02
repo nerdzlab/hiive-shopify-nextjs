@@ -16,3 +16,11 @@ export type Brand = {
   updatedAt: Date;
   websiteUrl: string;
 };
+
+export type BrandFormValues = {
+  person?: string;
+  websiteUrl?: string;
+  phoneNumber?: string;
+  brandName?: string;
+  logo?: File;
+};

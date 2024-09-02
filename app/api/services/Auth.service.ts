@@ -1,6 +1,6 @@
 import axiosInstance from "../axios";
 
-export const postSendEmail = async ({ email }) => {
+export const postSendEmail = async ({ email }: { email: string }) => {
   try {
     const response = await axiosInstance.post("/auth/send-otp", { email });
     return response;
@@ -9,8 +9,13 @@ export const postSendEmail = async ({ email }) => {
   }
 };
 
-export const postVerifyEmail = async ({ requestId, otp }) => {
-  console.log(requestId, otp);
+export const postVerifyEmail = async ({
+  requestId,
+  otp,
+}: {
+  requestId: string;
+  otp: string;
+}) => {
   try {
     const response = await axiosInstance.post("/auth/verify-otp", {
       otp,
@@ -22,7 +27,7 @@ export const postVerifyEmail = async ({ requestId, otp }) => {
   }
 };
 
-export const postResendCode = async ({ requestId }) => {
+export const postResendCode = async ({ requestId }: { requestId: string }) => {
   try {
     const response = await axiosInstance.post("/auth/resend-otp", {
       requestId,

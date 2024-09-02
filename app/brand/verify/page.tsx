@@ -28,19 +28,12 @@ import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
 import { useLazyQuery } from "@apollo/client";
 import { graphql } from "@/lib/gql";
-
-type FormValues = {
-  person?: string;
-  websiteUrl?: string;
-  phoneNumber?: string;
-  brandName?: string;
-  logo?: File;
-};
+import { BrandFormValues } from "@/types/Brand";
 
 const styles = {
   deleteIconHover: {
     cursor: "pointer",
-    position: "absolute",
+    position: "absolute" as "absolute",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -84,11 +77,11 @@ export default function NewPage() {
     fetchPolicy: "network-only",
   });
   const token = useRecoilValue(userToken);
-  const [errors, setErrors] = useState<FormValues>({});
+  const [errors, setErrors] = useState<BrandFormValues>({});
   const [loading, toggleLoading] = useBoolean();
   const [isHovered, toggle] = useBoolean();
 
-  const [formValues, setFormValue] = useState<FormValues>();
+  const [formValues, setFormValue] = useState<BrandFormValues>({});
 
   const onSubmit = async () => {
     toggleLoading.on();
@@ -114,10 +107,15 @@ export default function NewPage() {
         .catch((error) => console.error(error));
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        const errors = error.inner.reduce((acc, err) => {
-          acc[err.path] = err.message;
-          return acc;
-        }, {});
+        const errors = error.inner.reduce<{ [key: string]: string }>(
+          (acc, err) => {
+            if (err.path) {
+              acc[err.path] = err.message;
+            }
+            return acc;
+          },
+          {},
+        );
         setErrors(errors);
       }
     }
@@ -167,7 +165,7 @@ export default function NewPage() {
               Brand Creation Form
             </Text>
             <Text variant="bodyMd" as="p">
-              Please fill out this form, and we'll contact you soon.
+              Please fill out this form, and we&apos;ll contact you soon.
             </Text>
             <div style={{ height: 24 }} />
 
@@ -177,7 +175,7 @@ export default function NewPage() {
                   autoComplete="off"
                   name="person"
                   error={errors?.person}
-                  label="Owner/Contact person Full Name *"
+                  label="Person*"
                   value={formValues?.person}
                   onChange={handleFullNameChange}
                 />
@@ -202,7 +200,7 @@ export default function NewPage() {
                   type="text"
                   autoComplete="off"
                   name="brandName"
-                  label="Brand Shop Name *"
+                  label="Brand Name *"
                   error={errors?.brandName}
                   onChange={handleShopNameChange}
                   value={formValues?.brandName}
@@ -255,7 +253,7 @@ export default function NewPage() {
                       outline={false}
                       onDrop={handleDropZoneDrop}
                     >
-                      <Button icon={PageUpIcon}>Upload brand avatar</Button>
+                      <Button icon={PageUpIcon}>Upload Logo</Button>
                     </DropZone>
                   </div>
                 )}

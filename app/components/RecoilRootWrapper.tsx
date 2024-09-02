@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { RecoilRoot } from "recoil";
 
-function RecoilRootWrapper({ children }) {
+function RecoilRootWrapper({ children }: PropsWithChildren) {
   return <RecoilRoot>{children}</RecoilRoot>;
 }
 
