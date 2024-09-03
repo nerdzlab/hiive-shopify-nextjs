@@ -23,6 +23,7 @@ model Session {
   onlineAccessInfo OnlineAccessInfo?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  hasConnected     Boolean           @default(false)
 }
 
 model OnlineAccessInfo {

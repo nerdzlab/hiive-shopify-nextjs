@@ -14,7 +14,8 @@ import { useCallback, useState } from "react";
 import * as yup from "yup";
 import { postSendEmail } from "../api/services/Auth.service";
 import { useBoolean } from "@/hooks";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { ChevronLeftIcon } from "@shopify/polaris-icons";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -66,39 +67,46 @@ export default function NewPage() {
   return (
     <Page narrowWidth>
       <Layout.Section>
-        <Card>
-          <BlockStack gap="500">
-            <div>
-              <Text variant="heading2xl" as="h2">
-                Authorization
-              </Text>
-              <Text variant="bodyMd" as="p">
-                Please fill out this form, and we&apos;`ll contact you soon.
-              </Text>
-            </div>
-            <Form onSubmit={onSubmit}>
-              <FormLayout>
-                <TextField
-                  autoComplete="off"
-                  label="Email"
-                  name="email"
-                  error={errors?.email}
-                  value={textFieldValue}
-                  onChange={handleTextFieldChange}
-                />
-                <Button
-                  submit
-                  fullWidth
-                  loading={loading}
-                  disabled={!textFieldValue}
-                  variant="primary"
-                >
-                  Continue
-                </Button>
-              </FormLayout>
-            </Form>
-          </BlockStack>
-        </Card>
+        <BlockStack gap="500" align="start">
+          <div>
+            <Button onClick={router.back} icon={ChevronLeftIcon}>
+              Back
+            </Button>
+          </div>
+          <Card>
+            <BlockStack gap="500">
+              <div>
+                <Text variant="heading2xl" as="h2">
+                  Authorization
+                </Text>
+                <Text variant="bodyMd" as="p">
+                  Please fill out this form, and we&apos;`ll contact you soon.
+                </Text>
+              </div>
+              <Form onSubmit={onSubmit}>
+                <FormLayout>
+                  <TextField
+                    autoComplete="off"
+                    label="Email"
+                    name="email"
+                    error={errors?.email}
+                    value={textFieldValue}
+                    onChange={handleTextFieldChange}
+                  />
+                  <Button
+                    submit
+                    fullWidth
+                    loading={loading}
+                    disabled={!textFieldValue}
+                    variant="primary"
+                  >
+                    Continue
+                  </Button>
+                </FormLayout>
+              </Form>
+            </BlockStack>
+          </Card>
+        </BlockStack>
       </Layout.Section>
     </Page>
   );
