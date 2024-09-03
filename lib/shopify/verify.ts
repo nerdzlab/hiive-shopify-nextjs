@@ -169,7 +169,7 @@ export async function tokenExchange(
   });
   console.log(response);
   const { session } = response;
-  await storeSession(session);
+  return await storeSession(session);
 }
 
 /**

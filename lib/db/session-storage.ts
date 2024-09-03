@@ -4,7 +4,7 @@ import prisma from "./prisma-connect";
 const apiKey = process.env.SHOPIFY_API_KEY || "";
 
 export async function storeSession(session: ShopifySession) {
-  await prisma.session.upsert({
+  const newSession = await prisma.session.upsert({
     where: { id: session.id },
     update: {
       shop: session.shop,
@@ -65,6 +65,7 @@ export async function storeSession(session: ShopifySession) {
       },
     });
   }
+  return newSession;
 }
 
 export async function storeIsConnected(session: ShopifySession) {
