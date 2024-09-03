@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  #graphql\n  query getShop {\n    shop {\n      name\n    }\n  }\n": types.GetShopDocument,
+    "\n  query GetProducts($first: Int!) {\n    products(first: $first) {\n      nodes {\n        id\n        title\n        media(first: $first) {\n          nodes {\n            preview {\n              image {\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n": types.GetProductsDocument,
 };
 
 /**
@@ -34,6 +35,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  #graphql\n  query getShop {\n    shop {\n      name\n    }\n  }\n"): (typeof documents)["\n  #graphql\n  query getShop {\n    shop {\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetProducts($first: Int!) {\n    products(first: $first) {\n      nodes {\n        id\n        title\n        media(first: $first) {\n          nodes {\n            preview {\n              image {\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetProducts($first: Int!) {\n    products(first: $first) {\n      nodes {\n        id\n        title\n        media(first: $first) {\n          nodes {\n            preview {\n              image {\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -26,7 +26,6 @@ export async function storeSession(session: ShopifySession) {
       apiKey,
     },
   });
-
   if (session.onlineAccessInfo) {
     const onlineAccessInfo = await prisma.onlineAccessInfo.upsert({
       where: { sessionId: session.id },
@@ -40,7 +39,6 @@ export async function storeSession(session: ShopifySession) {
         associatedUserScope: session.onlineAccessInfo.associated_user_scope,
       },
     });
-
     const { associated_user } = session.onlineAccessInfo;
     const associatedUser = await prisma.associatedUser.upsert({
       where: { onlineAccessInfoId: onlineAccessInfo.id },
@@ -67,6 +65,15 @@ export async function storeSession(session: ShopifySession) {
       },
     });
   }
+}
+
+export async function storeIsConnected(session: ShopifySession) {
+  const sessionData = await prisma.session.update({
+    where: { id: session.id },
+    data: {
+      hasConnected: true,
+    },
+  });
 }
 
 export async function loadSession(id: string) {

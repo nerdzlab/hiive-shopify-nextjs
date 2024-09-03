@@ -4,7 +4,7 @@ import {
   LATEST_API_VERSION,
   LogSeverity,
 } from "@shopify/shopify-api";
-console.log(process.env.HOST);
+
 const shopify = shopifyApi({
   apiKey: process.env.SHOPIFY_API_KEY || "",
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
