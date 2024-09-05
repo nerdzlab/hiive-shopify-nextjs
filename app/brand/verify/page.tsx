@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 
 import {
   Button,
@@ -71,7 +71,7 @@ const GET_SHOP = graphql(`
   }
 `);
 
-export default function NewPage() {
+function BrandVerify() {
   const router = useRouter();
   const [getShop] = useLazyQuery(GET_SHOP, {
     fetchPolicy: "network-only",
@@ -298,3 +298,10 @@ export default function NewPage() {
     </Page>
   );
 }
+
+const BrandVerifyPage = () => (
+  <Suspense>
+    <BrandVerify />
+  </Suspense>
+);
+export default BrandVerifyPage;

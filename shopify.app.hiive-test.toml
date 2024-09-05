@@ -3,7 +3,7 @@
 client_id = "ffacefe4447fd2251711b492d822502d"
 name = "hiive-test"
 handle = "hiive-test"
-application_url = "https://never-copper-long-forge.trycloudflare.com"
+application_url = "https://bars-array-jewish-playing.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://never-copper-long-forge.trycloudflare.com/auth/callback",
-  "https://never-copper-long-forge.trycloudflare.com/auth/shopify/callback",
-  "https://never-copper-long-forge.trycloudflare.com/api/auth/callback"
+  "https://bars-array-jewish-playing.trycloudflare.com/auth/callback",
+  "https://bars-array-jewish-playing.trycloudflare.com/auth/shopify/callback",
+  "https://bars-array-jewish-playing.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
