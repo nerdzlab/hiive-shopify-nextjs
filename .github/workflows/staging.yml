@@ -47,8 +47,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-staging-shopify-nextjs:${{ github.run_number }} .
-          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-staging-shopify-nextjs:${{ github.run_number }}
+          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-shopify-nextjs:${{ github.run_number }} .
+          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-shopify-nextjs:${{ github.run_number }}
 
       - name: Update services
         run: |
