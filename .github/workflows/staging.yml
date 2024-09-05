@@ -16,7 +16,7 @@ jobs:
 
     env:
       AWS_REGION: us-west-2
-      SERVICES: staging-shopify-nextjs
+      SERVICE: shopify-nextjs
       ENVIRONMENT: staging
 
     steps:
@@ -47,21 +47,18 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-shopify-nextjs:${{ github.run_number }} .
-          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-shopify-nextjs:${{ github.run_number }}
+          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }} .
+          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }}
 
-      - name: Update services
+      - name: Update service
         run: |
-          IFS=',' read -r -a service_list <<< staging-shopify-nextjs
-          for service in "${service_list[@]}"; do
-            NEW_ECR_IMAGE=${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-backend:${{ github.run_number }} 
-            TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ env.ENVIRONMENT }}-${service} --output json --region=${{ env.AWS_REGION }})
+            NEW_ECR_IMAGE=${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }} 
+            TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ env.ENVIRONMENT }}-${{ env.SERVICE }} --output json --region=${{ env.AWS_REGION }})
             echo $TASK_DEFINITION | jq '.taskDefinition.containerDefinitions[0].image='\"${NEW_ECR_IMAGE}\" > task-definition.json
             sed -ie '2d' task-definition.json
             head -n -3 task-definition.json > temp && mv temp task-definition.json
             echo '}' >> task-definition.json
             echo $(cat task-definition.json | jq 'del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)') > task-definition.json
             aws ecs register-task-definition --region=${{ env.AWS_REGION }} --cli-input-json file://task-definition.json
-            TASK_REVISION=$(aws ecs describe-task-definition --task-definition  ${{ env.ENVIRONMENT }}-${service} --region=${{ env.AWS_REGION }} | egrep "revision" | tr "/" " " | awk '{print $2}' | sed 's/"$//' | sed -e $'s/,/\\\n/g')
-            aws ecs update-service --cluster ${{ env.ENVIRONMENT }} --service ${{ env.ENVIRONMENT }}-${service} --task-definition ${{ env.ENVIRONMENT }}-${service}:$TASK_REVISION --region=${{ env.AWS_REGION }}
-          done
+            TASK_REVISION=$(aws ecs describe-task-definition --task-definition  ${{ env.ENVIRONMENT }}-${{ env.SERVICE }} --region=${{ env.AWS_REGION }} | egrep "revision" | tr "/" " " | awk '{print $2}' | sed 's/"$//' | sed -e $'s/,/\\\n/g')
+            aws ecs update-service --cluster ${{ env.ENVIRONMENT }} --service ${{ env.ENVIRONMENT }}-${{ env.SERVICE }} --task-definition ${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:$TASK_REVISION --region=${{ env.AWS_REGION }}
