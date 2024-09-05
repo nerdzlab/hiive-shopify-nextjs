@@ -13,6 +13,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <ApolloProvider>
         <RecoilRoot>
           <ui-nav-menu>
+            <Link href="/overview">Overview</Link>
             <Link href="/inventory">Inventory</Link>
           </ui-nav-menu>
           {/* <SessionProvider> */}

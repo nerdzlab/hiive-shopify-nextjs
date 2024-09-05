@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 
 import {
   Button,
@@ -22,7 +22,7 @@ import {
 
 import * as yup from "yup";
 import { useBoolean } from "@/hooks";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
 import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
@@ -71,11 +71,13 @@ const GET_SHOP = graphql(`
   }
 `);
 
-export default function NewPage() {
+function BrandVerify() {
   const router = useRouter();
   const [getShop] = useLazyQuery(GET_SHOP, {
     fetchPolicy: "network-only",
   });
+  const searchParams = useSearchParams();
+  const isEdit = searchParams.get("edit") === "true";
   const token = useRecoilValue(userToken);
   const [errors, setErrors] = useState<BrandFormValues>({});
   const [loading, toggleLoading] = useBoolean();
@@ -152,7 +154,7 @@ export default function NewPage() {
   }, []);
 
   return (
-    <Page narrowWidth>
+    <Page narrowWidth={!isEdit}>
       <Layout.Section>
         <BlockStack gap="500" align="start">
           <div>
@@ -160,14 +162,28 @@ export default function NewPage() {
               Back
             </Button>
           </div>
+          {isEdit && (
+            <BlockStack>
+              <Text variant="heading2xl" as="h2">
+                Brand Onboarding Form
+              </Text>
+              <Text variant="bodyMd" as="p">
+                Lorem ipsum dolor sit amet, consectetur adipiscing eli.
+              </Text>
+            </BlockStack>
+          )}
           <Card>
-            <Text variant="heading2xl" as="h2">
-              Brand Creation Form
-            </Text>
-            <Text variant="bodyMd" as="p">
-              Please fill out this form, and we&apos;ll contact you soon.
-            </Text>
-            <div style={{ height: 24 }} />
+            {!isEdit && (
+              <>
+                <Text variant="heading2xl" as="h2">
+                  Brand Creation Form
+                </Text>
+                <Text variant="bodyMd" as="p">
+                  Please fill out this form, and we&apos;ll contact you soon.
+                </Text>
+                <div style={{ height: 24 }} />
+              </>
+            )}
 
             <Form onSubmit={onSubmit}>
               <FormLayout>
@@ -282,3 +298,10 @@ export default function NewPage() {
     </Page>
   );
 }
+
+const BrandVerifyPage = () => (
+  <Suspense>
+    <BrandVerify />
+  </Suspense>
+);
+export default BrandVerifyPage;
