@@ -15,11 +15,10 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://compliance-parental-laos-anticipated.trycloudflare.com/auth/callback",
-  "https://compliance-parental-laos-anticipated.trycloudflare.com/auth/shopify/callback",
-  "https://compliance-parental-laos-anticipated.trycloudflare.com/api/auth/callback"
+  "https://shopify.hiive.nerdzlab.dev/auth/callback",
+  "https://shopify.hiive.nerdzlab.dev/auth/shopify/callback",
+  "https://shopify.hiive.nerdzlab.dev/api/auth/callback"
 ]
-
 [webhooks]
 api_version = "2024-01"
 
