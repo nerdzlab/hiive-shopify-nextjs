@@ -47,12 +47,12 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-backend:${{ github.run_number }} .
-          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-backend:${{ github.run_number }}
+          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-staging-shopify-nextjs:${{ github.run_number }} .
+          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-staging-shopify-nextjs:${{ github.run_number }}
 
       - name: Update services
         run: |
-          IFS=',' read -r -a service_list <<< "${{ env.SERVICES }}"
+          IFS=',' read -r -a service_list <<< staging-shopify-nextjs
           for service in "${service_list[@]}"; do
             NEW_ECR_IMAGE=${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-backend:${{ github.run_number }} 
             TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ env.ENVIRONMENT }}-${service} --output json --region=${{ env.AWS_REGION }})
