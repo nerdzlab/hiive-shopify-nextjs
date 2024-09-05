@@ -3,7 +3,7 @@ name: Remote deploy via ssh
 on:
   push:
     branches: 
-      - github-actions-test
+      - main
       
 
 permissions:
