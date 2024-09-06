@@ -32,5 +32,5 @@ export const postBrandValidation = async ({
     },
   });
 
-  return null;
+  return response.data;
 };

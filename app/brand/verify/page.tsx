@@ -29,6 +29,7 @@ import { userToken } from "@/atoms/token";
 import { useLazyQuery } from "@apollo/client";
 import { graphql } from "@/lib/gql";
 import { BrandFormValues } from "@/types/Brand";
+import { postProductApprove } from "@/app/api/services/Product.service";
 
 const styles = {
   deleteIconHover: {
@@ -100,10 +101,13 @@ function BrandVerify() {
         formValues,
         shopifyAccessToken: result.data.accessToken,
       })
-        .then(() => {
+        .then((data) => {
           // shopify.toast.show("Brand Creation Form is successfully sent.", {
           //   duration: 5000,
           // });
+          return postProductApprove(data?.id);
+        })
+        .then(() => {
           router.push("/brand/status");
         })
         .catch((error) => console.error(error));
