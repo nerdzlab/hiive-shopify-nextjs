@@ -13,8 +13,13 @@ import { useCallback, useState } from "react";
 import { postPublishProduct } from "../api/services/Product.service";
 import { useRecoilValue } from "recoil";
 import { activeProductModal } from "@/atoms/activeProductModal";
+import { useSWRConfig } from "swr";
 
-export const PublishProductModal = () => {
+export const PublishProductModal = ({
+  revalidatePage,
+}: {
+  revalidatePage: () => void;
+}) => {
   const modalData = useRecoilValue(activeProductModal);
   const [rangeValue, setRangeValue] = useState(60);
   const [textFieldValue, setTextFieldValue] = useState("2.00");
@@ -36,6 +41,7 @@ export const PublishProductModal = () => {
       discount: rangeValue,
       publishStartAt: "2024-11-01 10:00:00",
     });
+    revalidatePage();
 
     (
       document.getElementById("my-modal") as HTMLElement & {

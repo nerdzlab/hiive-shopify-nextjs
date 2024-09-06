@@ -20,7 +20,7 @@ export const postUnPublishProduct = async (productId: string) => {
   try {
     const token = localStorage.getItem("user-token");
     const response = await axiosInstance.post(
-      "/product/publish",
+      "/product/unpublish",
       { productId },
       {
         headers: {

@@ -54,7 +54,7 @@ export default function Products() {
     defaultProductsFilters,
   );
   const token = useRecoilValue(userToken);
-  const { data, size, setSize, error, isLoading } =
+  const { data, mutate, size, setSize, error, isLoading } =
     useSWRInfinite<ProductsApiResponse>((pageIndex, previousPageData) => {
       const status = filters.status ? StatusMap[filters.status] : undefined;
       const query = queryString.stringify({
@@ -69,12 +69,19 @@ export default function Products() {
       });
 
       if (!pageIndex && !previousPageData) {
-        return [`/products?${query}`, token];
+        return [`/products?${query}`, token, pageIndex + 1];
       }
-      return [`/products?${query}`, token];
+      return [`/products?${query}`, token, pageIndex + 1];
     }, swrFetcher);
-
+  console.log(size);
   const handlePageChange = (newPage: number) => setSize(newPage);
+
+  const revalidatePage = () => {
+    mutate(data, {
+      // @ts-ignore
+      revalidate: (_, [, , page]) => page === size,
+    });
+  };
 
   if (error) {
     return (
@@ -91,14 +98,17 @@ export default function Products() {
     >
       <BlockStack gap="500">
         <CardWithHeaderActions setFilters={setFilters} filters={filters} />
-        <PublishProductModal />
+        <PublishProductModal revalidatePage={revalidatePage} />
         <Card>
           {isLoading || !data?.[size - 1] ? (
             <div className="flex items-center justify-center h-full">
               <Spinner accessibilityLabel="Spinner example" size="large" />
             </div>
           ) : (
-            <InventoryTable items={data?.[size - 1]?.products} />
+            <InventoryTable
+              revalidatePage={revalidatePage}
+              items={data?.[size - 1]?.products}
+            />
           )}
 
           <div className="polaris-btn mt-4">

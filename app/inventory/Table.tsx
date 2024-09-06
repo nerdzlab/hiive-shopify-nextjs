@@ -42,7 +42,13 @@ const ProductImageList = ({ images }: { images: Product["images"] }) => (
   </div>
 );
 
-export const InventoryTable = ({ items }: { items: Product[] }) => {
+export const InventoryTable = ({
+  items,
+  revalidatePage,
+}: {
+  items: Product[];
+  revalidatePage: () => void;
+}) => {
   const rowMarkup = items.map(
     (
       { images, discount, id, title, SKU, COGS, price, status, amount },
@@ -62,7 +68,12 @@ export const InventoryTable = ({ items }: { items: Product[] }) => {
         <IndexTable.Cell>{SKU}</IndexTable.Cell>
         <IndexTable.Cell>{discount}%</IndexTable.Cell>
         <IndexTable.Cell>
-          <ProductActionButton status={status} id={id} price={price} />
+          <ProductActionButton
+            revalidatePage={revalidatePage}
+            status={status}
+            id={id}
+            price={price}
+          />
         </IndexTable.Cell>
       </IndexTable.Row>
     ),

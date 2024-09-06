@@ -8,10 +8,12 @@ const ProductActionButton = ({
   status,
   id,
   price,
+  revalidatePage,
 }: {
   status: PublishStatus;
   id: string;
   price?: string;
+  revalidatePage: () => void;
 }) => {
   const setId = useSetRecoilState(activeProductModal);
   if (
@@ -41,6 +43,7 @@ const ProductActionButton = ({
 
   const unPublishProduct = async () => {
     await postUnPublishProduct(String(id));
+    revalidatePage();
   };
 
   return (
