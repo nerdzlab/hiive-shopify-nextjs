@@ -57,7 +57,7 @@ export default function Home({ shop }: { shop: string }) {
 
   useEffect(() => {
     app.idToken().then((token) => {
-      doTokenExchange(shop, token, true).then((data) => {
+      doTokenExchange(shop, token, false).then((data) => {
         if (data.hasConnected) {
           checkForToken();
         }

@@ -40,7 +40,7 @@ const ProductActionButton = ({
   }
 
   const unPublishProduct = async () => {
-    await postUnPublishProduct(id as string);
+    await postUnPublishProduct(String(id));
   };
 
   return (

@@ -104,14 +104,12 @@ export default function Products() {
           <div className="polaris-btn mt-4">
             <ButtonGroup variant="segmented">
               <Button
-                variant="primary"
                 onClick={() => handlePageChange(size - 1)}
                 disabled={!data?.[size - 1]?.pageInfo?.hasPreviousPage}
               >
                 Previous Page
               </Button>
               <Button
-                variant="primary"
                 onClick={() => handlePageChange(size + 1)}
                 disabled={!data?.[size - 1]?.pageInfo?.hasNextPage}
               >
