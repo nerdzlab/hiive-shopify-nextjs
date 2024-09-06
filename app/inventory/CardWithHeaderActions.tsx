@@ -1,17 +1,32 @@
 import {
+  Badge,
   BlockStack,
   Button,
   Card,
   Collapsible,
   InlineGrid,
+  InlineStack,
   Text,
   TextField,
 } from "@shopify/polaris";
-import { useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import InventoryFilters from "../components/InventoryFilters";
+import { ProductsFilters } from "./page";
 
-export function CardWithHeaderActions() {
+export function CardWithHeaderActions({
+  setFilters,
+  filters,
+}: {
+  setFilters: Dispatch<SetStateAction<ProductsFilters>>;
+  filters: ProductsFilters;
+}) {
   const [open, setOpen] = useState(true);
+  const appliedFiltersAmount = [
+    filters?.search,
+    filters?.status,
+    filters?.inventory?.min,
+  ].filter(Boolean)?.length;
+  const badgeText = `${appliedFiltersAmount} filter applied`;
 
   const handleToggle = useCallback(() => setOpen((open) => !open), []);
 
@@ -19,9 +34,16 @@ export function CardWithHeaderActions() {
     <Card roundedAbove="sm">
       <BlockStack gap="200">
         <InlineGrid columns="1fr auto">
-          <Text as="h2" variant="headingSm">
-            Filters
-          </Text>
+          <InlineStack blockAlign="center" gap="400">
+            <Text as="h2" variant="headingSm">
+              Filters
+            </Text>
+            {!!appliedFiltersAmount && !open && (
+              <Badge tone="success" progress="complete">
+                {badgeText}
+              </Badge>
+            )}
+          </InlineStack>
           <Button
             fullWidth
             textAlign="left"
@@ -38,16 +60,7 @@ export function CardWithHeaderActions() {
           expandOnPrint
         >
           <BlockStack gap="500">
-            <TextField
-              label=""
-              placeholder="Searching in all"
-              type="number"
-              // value={textFieldValue}
-              // onChange={handleTextFieldChange}
-              prefix="$"
-              autoComplete="off"
-            />
-            <InventoryFilters />
+            <InventoryFilters setFilters={setFilters} />
           </BlockStack>
         </Collapsible>
       </BlockStack>

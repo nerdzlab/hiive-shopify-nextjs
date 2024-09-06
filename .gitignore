@@ -27,6 +27,10 @@ extensions/*/build
 # Node library SQLite database
 web/database.sqlite
 
+# shopify app config files
+shopify.app.development.toml
+shopify.app.hiive-test.toml
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

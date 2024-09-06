@@ -107,7 +107,11 @@ function NewPage() {
 
       setToken(response.data.accessToken);
 
-      if (response.data?.approvalStatus === BrandApprovalStatus.Approved) {
+      if (response.data?.brand.approvalStatus === BrandApprovalStatus.Pending) {
+        router.push("/brand/status");
+      } else if (
+        response.data?.brand.approvalStatus === BrandApprovalStatus.Approved
+      ) {
         router.push("/brand/verify");
       } else {
         router.push("/inventory");

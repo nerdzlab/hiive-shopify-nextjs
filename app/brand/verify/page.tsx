@@ -95,7 +95,7 @@ function BrandVerify() {
       const result = await response.json();
 
       await postBrandValidation({
-        shop: result.data?.shop,
+        shop: result.data?.shop.split(".")[0],
         token,
         formValues,
         shopifyAccessToken: result.data.accessToken,

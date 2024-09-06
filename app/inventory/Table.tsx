@@ -1,10 +1,9 @@
 import { EmptySearchResult, Icon, IndexTable, Text } from "@shopify/polaris";
 import { ProductStatusBadge } from "./ProductStatusBadge";
 import { ProductActionButton } from "./ProductActionButton";
-import { ITEMS_PER_PAGE } from "./utils";
 import Image from "next/image";
 import { InfoIcon } from "@shopify/polaris-icons";
-import { PublishStatus } from "@/types/Product";
+import { Product } from "@/types/Product";
 
 const tableHeaderTitle = (title: string, tooltip?: string) => ({
   title: (
@@ -12,7 +11,11 @@ const tableHeaderTitle = (title: string, tooltip?: string) => ({
       <Text as="h3" variant="headingSm" fontWeight="bold">
         {title}
       </Text>
-      {tooltip && <Icon source={InfoIcon} />}
+      {tooltip && (
+        <div>
+          <Icon source={InfoIcon} />
+        </div>
+      )}
     </div>
   ),
   tooltipContent: tooltip ? (
@@ -26,42 +29,44 @@ const tableHeaderTitle = (title: string, tooltip?: string) => ({
   id: title,
 });
 
-export const InventoryTable = ({
-  items,
-  currentPage,
-}: {
-  items: {
-    image: { src: string };
-    id: string;
-    title: string;
-    status: PublishStatus;
-  }[];
-  currentPage: number;
-}) => {
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
+const ProductImageList = ({ images }: { images: Product["images"] }) => (
+  <div className="border-[#E3E3E3] rounded-lg border-[1px] border-solid	h-[56px] w-[56px] overflow-hidden">
+    <Image height={56} width={56} alt="" src={images[0]?.url} />
+    {images?.length > 1 && (
+      <div className="bg-[#303030] px-1 py-[2px] text-white rounded-lg absolute right-1.5 bottom-1">
+        <Text variant="bodyXs" as="p">
+          +{images?.length - 1}
+        </Text>
+      </div>
+    )}
+  </div>
+);
 
-  const currentItems = items.slice(startIndex, endIndex);
-
-  const rowMarkup = currentItems.map(({ image, id, title, status }, index) => (
-    <IndexTable.Row id={id} key={id} position={index}>
-      <IndexTable.Cell>
-        <Image height={40} alt="" src={image?.src} />
-      </IndexTable.Cell>
-      <IndexTable.Cell>{title}</IndexTable.Cell>
-      <IndexTable.Cell>$22</IndexTable.Cell>
-      <IndexTable.Cell>3 in stock</IndexTable.Cell>
-      <IndexTable.Cell>
-        <ProductStatusBadge status={status} />
-      </IndexTable.Cell>
-      <IndexTable.Cell>$21.99</IndexTable.Cell>
-      <IndexTable.Cell>sku</IndexTable.Cell>
-      <IndexTable.Cell>30%</IndexTable.Cell>
-      <IndexTable.Cell>
-        <ProductActionButton status={status} />
-      </IndexTable.Cell>
-    </IndexTable.Row>
-  ));
+export const InventoryTable = ({ items }: { items: Product[] }) => {
+  const rowMarkup = items.map(
+    (
+      { images, discount, id, title, SKU, COGS, price, status, amount },
+      index,
+    ) => (
+      <IndexTable.Row id={String(id)} key={id} position={index}>
+        <IndexTable.Cell>
+          {!!images?.length && <ProductImageList images={images} />}
+        </IndexTable.Cell>
+        <IndexTable.Cell>{title}</IndexTable.Cell>
+        <IndexTable.Cell>${price}</IndexTable.Cell>
+        <IndexTable.Cell>{amount} in stock</IndexTable.Cell>
+        <IndexTable.Cell>
+          <ProductStatusBadge status={status} />
+        </IndexTable.Cell>
+        <IndexTable.Cell>${COGS || 0}</IndexTable.Cell>
+        <IndexTable.Cell>{SKU}</IndexTable.Cell>
+        <IndexTable.Cell>{discount}%</IndexTable.Cell>
+        <IndexTable.Cell>
+          <ProductActionButton status={status} id={id} price={price} />
+        </IndexTable.Cell>
+      </IndexTable.Row>
+    ),
+  );
 
   const emptyStateMarkup = (
     <EmptySearchResult

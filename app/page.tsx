@@ -2,7 +2,6 @@ import { performChecks } from "@/lib/shopify/shopify-oauth";
 import Home from "./components/main-page";
 import { ExitClient } from "./components/exit-client";
 
-console.log(process.env.HOST);
 export default async function Page({
   params,
   searchParams,

@@ -1,7 +1,19 @@
+import { activeProductModal } from "@/atoms/activeProductModal";
 import { PublishStatus } from "@/types/Product";
 import { Button } from "@shopify/polaris";
+import { useSetRecoilState } from "recoil";
+import { postUnPublishProduct } from "../api/services/Product.service";
 
-const ProductActionButton = ({ status }: { status: PublishStatus }) => {
+const ProductActionButton = ({
+  status,
+  id,
+  price,
+}: {
+  status: PublishStatus;
+  id: string;
+  price?: string;
+}) => {
+  const setId = useSetRecoilState(activeProductModal);
   if (
     status === PublishStatus.Unpublished ||
     status === PublishStatus.Rejected
@@ -9,6 +21,10 @@ const ProductActionButton = ({ status }: { status: PublishStatus }) => {
     return (
       <Button
         onClick={() => {
+          setId({
+            id,
+            price,
+          });
           (
             document.getElementById("my-modal") as HTMLElement & {
               show: () => void;
@@ -23,7 +39,15 @@ const ProductActionButton = ({ status }: { status: PublishStatus }) => {
     );
   }
 
-  return <Button size="large">Unpublish</Button>;
+  const unPublishProduct = async () => {
+    await postUnPublishProduct(id as string);
+  };
+
+  return (
+    <Button size="large" onClick={unPublishProduct}>
+      Unpublish
+    </Button>
+  );
 };
 
 export { ProductActionButton };

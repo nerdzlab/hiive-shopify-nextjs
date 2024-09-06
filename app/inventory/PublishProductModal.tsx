@@ -10,8 +10,12 @@ import {
   TextField,
 } from "@shopify/polaris";
 import { useCallback, useState } from "react";
+import { postPublishProduct } from "../api/services/Product.service";
+import { useRecoilValue } from "recoil";
+import { activeProductModal } from "@/atoms/activeProductModal";
 
 export const PublishProductModal = () => {
+  const modalData = useRecoilValue(activeProductModal);
   const [rangeValue, setRangeValue] = useState(60);
   const [textFieldValue, setTextFieldValue] = useState("2.00");
 
@@ -25,6 +29,21 @@ export const PublishProductModal = () => {
     [],
   );
 
+  const onSubmit = async () => {
+    await postPublishProduct({
+      productId: String(modalData.id),
+      COGS: +textFieldValue,
+      discount: rangeValue,
+      publishStartAt: "2024-11-01 10:00:00",
+    });
+
+    (
+      document.getElementById("my-modal") as HTMLElement & {
+        hide: () => void;
+      }
+    )?.hide();
+  };
+
   return (
     <Modal id="my-modal">
       <TitleBar title="Publish product"></TitleBar>
@@ -37,8 +56,8 @@ export const PublishProductModal = () => {
           <TextField
             label="From"
             type="number"
-            value={textFieldValue}
-            onChange={handleTextFieldChange}
+            // value={textFieldValue}
+            // onChange={handleTextFieldChange}
             autoComplete="off"
           />
 
@@ -74,7 +93,11 @@ export const PublishProductModal = () => {
                     Final price with discount
                   </Text>
                   <Text as="h3" variant="headingMd" alignment="end">
-                    $21.99
+                    $
+                    {(
+                      Number(modalData.price) -
+                      (Number(modalData.price) * rangeValue) / 100
+                    ).toFixed(2)}
                   </Text>
                 </BlockStack>
               </InlineStack>
@@ -101,16 +124,15 @@ export const PublishProductModal = () => {
       <Box paddingBlock="600" paddingInline="600">
         <InlineStack align="end">
           <ButtonGroup>
-            <Button onClick={() => {}} accessibilityLabel="Dismiss">
-              Dismiss
-            </Button>
             <Button
+              onClick={onSubmit}
               variant="primary"
-              onClick={() => {}}
-              // icon={ExportIcon}
-              accessibilityLabel="Export Report"
+              accessibilityLabel="Publish"
             >
-              Export Report
+              Publish
+            </Button>
+            <Button onClick={() => {}} accessibilityLabel="Cancel">
+              Cancel
             </Button>
           </ButtonGroup>
         </InlineStack>
