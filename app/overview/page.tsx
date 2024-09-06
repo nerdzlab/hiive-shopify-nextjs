@@ -21,8 +21,8 @@ export default function Products() {
   return (
     <Page fullWidth title="Hiive Channel Overview">
       <BlockStack gap="500">
-        <Grid>
-          <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
+        <Grid columns={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 2 }}>
+          <Grid.Cell columnSpan={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}>
             <Card>
               <CardWithAction
                 icon={ProductIcon}
@@ -32,7 +32,7 @@ export default function Products() {
               />
             </Card>
           </Grid.Cell>
-          <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
+          <Grid.Cell columnSpan={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}>
             <Card>
               <CardWithAction
                 icon={SettingsIcon}
