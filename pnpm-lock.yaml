@@ -24,8 +24,8 @@ dependencies:
     specifier: ^4.0.0
     version: 4.0.0(react-dom@18.2.0)(react@18.2.0)
   '@shopify/polaris':
-    specifier: ^12.21.0
-    version: 12.21.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: 13.9.0
+    version: 13.9.0(react-dom@18.2.0)(react@18.2.0)
   '@shopify/shopify-api':
     specifier: ^9.5.0
     version: 9.5.0
@@ -1870,27 +1870,31 @@ packages:
     engines: {node: ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@shopify/polaris-icons@8.8.0:
-    resolution: {integrity: sha512-B4kym/sWAif0pSClysCeOMxfKBPhCZaAdoR+7J50SAoI6gg47jBAUS+PRexj+gXAmxLOystcCCibwyL1QZDW+A==}
-    engines: {node: ^16.17.0 || >=18.12.0}
+  /@shopify/polaris-icons@9.3.0(react@18.2.0):
+    resolution: {integrity: sha512-fnH5Lcd3WFZNjlxGYGNtnjeq3P2xonRV8vChW4PqBfxdKlY/GQ/3/rIuxHzIgmLL0zukeZUaqERUN0lwSU+Xmg==}
+    engines: {node: '>=20.10.0'}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
     dev: false
 
-  /@shopify/polaris-tokens@8.8.0:
-    resolution: {integrity: sha512-Ml0sR+hu/uZJVDZjF2+2qgogCrXSvQ8TOwkrRNUuzhDG58f99FHnyuQ1kprUFyDt0DSEZJ0Jf4pzrBnkI0UgVg==}
-    engines: {node: ^16.17.0 || >=18.12.0}
+  /@shopify/polaris-tokens@9.4.0:
+    resolution: {integrity: sha512-jnCNxq9+XfWP9ijkvSsgQH5o3PeYgfWo4/zymoO+AeJvyngL+4LvlZ/nofvYj9DXLo74taTk05xui9qt22Zy2Q==}
+    engines: {node: '>=20.10.0'}
     dependencies:
       deepmerge: 4.3.1
     dev: false
 
-  /@shopify/polaris@12.21.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-QnNgJN+NAvRMKb5JcKSpNGUyCo+vzR+eNraBts2Y3KWKqjqrHCRCMGJLsTHSEHckw/9ZvkG3dJcN40sH9eI+sg==}
-    engines: {node: ^16.17.0 || >=18.12.0}
+  /@shopify/polaris@13.9.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-zU9+mNSz5kxwKtPNWO26QlK3Ip+uZh9WNclr4PDHhzlb9d4dxOGkbfaJGPaANVEIP34tLuHVcjH+l8DhwM8mog==}
+    engines: {node: '>=20.10.0'}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
-      '@shopify/polaris-icons': 8.8.0
-      '@shopify/polaris-tokens': 8.8.0
+      '@shopify/polaris-icons': 9.3.0(react@18.2.0)
+      '@shopify/polaris-tokens': 9.4.0
       '@types/react': 18.2.67
       '@types/react-dom': 18.2.22
       '@types/react-transition-group': 4.4.10
