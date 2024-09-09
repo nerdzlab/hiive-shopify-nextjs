@@ -15,15 +15,11 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 import * as yup from "yup";
-import {
-  postResendCode,
-  postSendEmail,
-  postVerifyEmail,
-} from "../../api/services/Auth.service";
+import { postResendCode } from "../../api/services/Auth.service";
 import { useBoolean } from "@/hooks";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { userToken } from "@/atoms/token";
-import { BrandApprovalStatus } from "@/types/Brand";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import withAuth from "@/app/components/WithAuth/WithAuth";
 
 const validationSchema = yup.object().shape({
   code: yup
@@ -82,7 +78,8 @@ const ResendButton = ({
 };
 
 function NewPage() {
-  const setToken = useSetRecoilState(userToken);
+  const auth = useAuth();
+  const { login } = auth || {};
   const router = useRouter();
   const searchParams = useSearchParams();
   const [requestId, setRequestId] = useState(
@@ -100,22 +97,7 @@ function NewPage() {
     try {
       await validationSchema.validate(data, { abortEarly: false });
 
-      const response = await postVerifyEmail({
-        otp: textFieldValue,
-        requestId,
-      });
-
-      setToken(response.data.accessToken);
-
-      if (response.data?.brand.approvalStatus === BrandApprovalStatus.Pending) {
-        router.push("/brand/status");
-      } else if (
-        response.data?.brand.approvalStatus === BrandApprovalStatus.Approved
-      ) {
-        router.push("/inventory");
-      } else {
-        router.push("/brand/verify");
-      }
+      login && (await login(textFieldValue, requestId));
     } catch (error) {
       if (error instanceof yup.ValidationError) {
         const errors = error.inner.reduce<{ [key: string]: string }>(
@@ -198,4 +180,4 @@ const LoginVerifyEmailPage = () => (
   </Suspense>
 );
 
-export default LoginVerifyEmailPage;
+export default withAuth(LoginVerifyEmailPage);

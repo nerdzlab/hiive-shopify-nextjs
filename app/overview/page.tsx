@@ -12,8 +12,9 @@ import {
 import { ProductIcon, SettingsIcon } from "@shopify/polaris-icons";
 import { useRouter } from "next/navigation";
 import { CardWithAction } from "../components/CardWithAction";
+import withAuth from "../components/WithAuth/WithAuth";
 
-export default function Products() {
+function Overview() {
   const router = useRouter();
 
   const onSettingsClick = () => router.push("/settings");
@@ -68,3 +69,5 @@ export default function Products() {
     </Page>
   );
 }
+
+export default withAuth(Overview);

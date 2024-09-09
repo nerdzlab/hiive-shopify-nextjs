@@ -16,6 +16,7 @@ import { postSendEmail } from "../api/services/Auth.service";
 import { useBoolean } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@shopify/polaris-icons";
+import withAuth from "../components/WithAuth/WithAuth";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -24,7 +25,7 @@ const validationSchema = yup.object().shape({
     .required("Email is required"),
 });
 
-export default function NewPage() {
+function LoginPage() {
   const router = useRouter();
   const [textFieldValue, setTextFieldValue] = useState("");
   const [errors, setErrors] = useState<{ email?: string }>({});
@@ -111,3 +112,5 @@ export default function NewPage() {
     </Page>
   );
 }
+
+export default withAuth(LoginPage);

@@ -20,6 +20,7 @@ import { InventoryTable } from "./Table";
 import { Product, PublishStatus } from "@/types/Product";
 import { defaultProductsFilters, ITEMS_PER_PAGE } from "./utils";
 import { useState } from "react";
+import withAuth from "../components/WithAuth/WithAuth";
 
 type ApiPagination = {
   endCursor: string;
@@ -49,10 +50,11 @@ const StatusMap: { [key: string]: PublishStatus } = {
   Rejected: PublishStatus.Rejected,
 };
 
-export default function Products() {
+function Products() {
   const [filters, setFilters] = useState<ProductsFilters>(
     defaultProductsFilters,
   );
+
   const token = useRecoilValue(userToken);
   const { data, mutate, size, setSize, error, isLoading } =
     useSWRInfinite<ProductsApiResponse>((pageIndex, previousPageData) => {
@@ -132,3 +134,5 @@ export default function Products() {
     </Page>
   );
 }
+
+export default withAuth(Products);

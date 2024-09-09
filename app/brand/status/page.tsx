@@ -1,5 +1,6 @@
 "use client";
 import { swrFetcher } from "@/app/api/swrFetcher";
+import withAuth from "@/app/components/WithAuth/WithAuth";
 import { userToken } from "@/atoms/token";
 import { Brand, BrandApprovalStatus } from "@/types/Brand";
 import {
@@ -15,7 +16,6 @@ import {
   Thumbnail,
 } from "@shopify/polaris";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import useSWR from "swr";
 
@@ -72,8 +72,7 @@ const BrandReviewStatus = ({ status }: { status: BrandApprovalStatus }) => {
   );
 };
 
-export default function BrandForm() {
-  const router = useRouter();
+function BrandStatus() {
   const token = useRecoilValue(userToken);
   const { data, error, isLoading } = useSWR<Brand>(
     ["/brand/me", token],
@@ -82,12 +81,6 @@ export default function BrandForm() {
       shouldRetryOnError: false,
     },
   );
-
-  useEffect(() => {
-    if (data && data.approvalStatus === BrandApprovalStatus.Approved) {
-      router.push("/inventory");
-    }
-  }, [data, router]);
 
   if (isLoading || !data) {
     return null;
@@ -131,3 +124,5 @@ export default function BrandForm() {
     </Page>
   );
 }
+
+export default withAuth(BrandStatus);
