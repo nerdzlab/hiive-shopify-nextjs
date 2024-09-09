@@ -1,5 +1,6 @@
 "use client";
-import { Suspense, useCallback, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useAppBridge } from "@shopify/app-bridge-react";
 
 import {
   Button,
@@ -26,8 +27,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
 import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
-import { useLazyQuery } from "@apollo/client";
-import { graphql } from "@/lib/gql";
 import { BrandFormValues } from "@/types/Brand";
 import { postProductApprove } from "@/app/api/services/Product.service";
 
@@ -63,27 +62,16 @@ const validationSchema = yup.object().shape({
   brandName: yup.string().required("Person is required"),
 });
 
-const GET_SHOP = graphql(`
-  #graphql
-  query getShop {
-    shop {
-      name
-    }
-  }
-`);
-
 function BrandVerify() {
   const router = useRouter();
-  const [getShop] = useLazyQuery(GET_SHOP, {
-    fetchPolicy: "network-only",
-  });
+
   const searchParams = useSearchParams();
   const isEdit = searchParams.get("edit") === "true";
   const token = useRecoilValue(userToken);
   const [errors, setErrors] = useState<BrandFormValues>({});
   const [loading, toggleLoading] = useBoolean();
   const [isHovered, toggle] = useBoolean();
-
+  const appBridge = useAppBridge();
   const [formValues, setFormValue] = useState<BrandFormValues>({});
 
   const onSubmit = async () => {
@@ -102,9 +90,9 @@ function BrandVerify() {
         shopifyAccessToken: result.data.accessToken,
       })
         .then((data) => {
-          // shopify.toast.show("Brand Creation Form is successfully sent.", {
-          //   duration: 5000,
-          // });
+          appBridge.toast.show("Brand Creation Form is successfully sent.", {
+            duration: 5000,
+          });
           return postProductApprove(data?.id);
         })
         .then(() => {
@@ -183,7 +171,7 @@ function BrandVerify() {
                   Brand Creation Form
                 </Text>
                 <Text variant="bodyMd" as="p">
-                  Please fill out this form, and we&apos;ll contact you soon.
+                  Fill out this form, and we'll get back to you soon.
                 </Text>
                 <div style={{ height: 24 }} />
               </>
@@ -195,12 +183,12 @@ function BrandVerify() {
                   autoComplete="off"
                   name="person"
                   error={errors?.person}
-                  label="Person*"
+                  label="Contact Person Name *"
                   value={formValues?.person}
                   onChange={handleFullNameChange}
                 />
                 <TextField
-                  label="Phone Number *"
+                  label="Contact Phone Number *"
                   autoComplete="off"
                   name="phoneNumber"
                   error={errors?.phoneNumber}
@@ -210,7 +198,7 @@ function BrandVerify() {
                 <TextField
                   type="text"
                   autoComplete="off"
-                  label="Website *"
+                  label="Brand Website *"
                   name="websiteUrl"
                   error={errors?.websiteUrl}
                   onChange={handleWebsiteChange}
