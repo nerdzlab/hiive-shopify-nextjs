@@ -112,9 +112,9 @@ function NewPage() {
       } else if (
         response.data?.brand.approvalStatus === BrandApprovalStatus.Approved
       ) {
-        router.push("/brand/verify");
-      } else {
         router.push("/inventory");
+      } else {
+        router.push("/brand/verify");
       }
     } catch (error) {
       if (error instanceof yup.ValidationError) {
