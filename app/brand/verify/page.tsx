@@ -29,6 +29,7 @@ import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
 import { BrandFormValues } from "@/types/Brand";
 import { postProductApprove } from "@/app/api/services/Product.service";
+import { ConfirmBrandChangeModal } from "./ConfirmBrandChangeModal";
 
 const styles = {
   deleteIconHover: {
@@ -74,6 +75,21 @@ function BrandVerify() {
   const appBridge = useAppBridge();
   const [formValues, setFormValue] = useState<BrandFormValues>({});
 
+  const preventFormSave = (callback: () => void) => {
+    if (isEdit) {
+      return () =>
+        (
+          document.getElementById(
+            "confirm-brand-change-modal",
+          ) as HTMLElement & {
+            show: () => void;
+          }
+        )?.show();
+    } else {
+      return callback;
+    }
+  };
+
   const onSubmit = async () => {
     toggleLoading.on();
 
@@ -90,7 +106,10 @@ function BrandVerify() {
         shopifyAccessToken: result.data.accessToken,
       })
         .then((data) => {
-          appBridge.toast.show("Brand Creation Form is successfully sent.", {
+          const toastTitle = isEdit
+            ? "The Brand Form has been successfully changed."
+            : "Brand Creation Form is successfully sent.";
+          appBridge.toast.show(toastTitle, {
             duration: 5000,
           });
           return postProductApprove(data?.id);
@@ -148,6 +167,7 @@ function BrandVerify() {
   return (
     <Page narrowWidth={!isEdit}>
       <Layout.Section>
+        <ConfirmBrandChangeModal onConfirm={onSubmit} />
         <BlockStack gap="500" align="start">
           <div>
             <Button onClick={router.back} icon={ChevronLeftIcon}>
@@ -171,13 +191,13 @@ function BrandVerify() {
                   Brand Creation Form
                 </Text>
                 <Text variant="bodyMd" as="p">
-                  Fill out this form, and we'll get back to you soon.
+                  Fill out this form, and we&apos;ll get back to you soon.
                 </Text>
                 <div style={{ height: 24 }} />
               </>
             )}
 
-            <Form onSubmit={onSubmit}>
+            <Form onSubmit={preventFormSave(onSubmit)}>
               <FormLayout>
                 <TextField
                   autoComplete="off"

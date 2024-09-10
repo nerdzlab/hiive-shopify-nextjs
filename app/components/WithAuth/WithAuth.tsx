@@ -12,7 +12,7 @@ import {
 } from "@/utils/routes";
 
 const withAuth = <T extends {}>(WrappedComponent: React.ComponentType<T>) => {
-  return (props: PropsWithChildren) => {
+  return (props: any) => {
     const router = useRouter();
     const auth = useAuth();
     const {

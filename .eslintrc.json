@@ -1,4 +1,6 @@
 {
   "extends": ["next/core-web-vitals", "prettier"],
-  "rules": {}
+  "rules": {
+    "react/display-name": "off"
+  }
 }

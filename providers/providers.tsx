@@ -7,7 +7,7 @@ import ApolloProvider from "./ApolloProvider";
 import { RecoilRoot } from "recoil";
 import Link from "next/link";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { PRODUCTS, OVERVIEW } from "@/utils/routes";
+import { PRODUCTS, OVERVIEW, SETTINGS } from "@/utils/routes";
 
 const SideBar = () => {
   const auth = useAuth();
@@ -17,6 +17,7 @@ const SideBar = () => {
     <ui-nav-menu>
       <Link href={OVERVIEW}>Overview</Link>
       <Link href={PRODUCTS}>Products</Link>
+      <Link href={SETTINGS}>Settings</Link>
     </ui-nav-menu>
   ) : null;
 };
