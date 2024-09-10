@@ -6,10 +6,10 @@ export const ProductStatusBadge = ({ status }: { status: PublishStatus }) => {
     return <Badge tone="success">Published</Badge>;
   }
   if (status === PublishStatus.Unpublished) {
-    return <Badge>Not published</Badge>;
+    return <Badge>Unpublished</Badge>;
   }
   if (status === PublishStatus.PublishRequested) {
-    return <Badge tone="warning">Pending for publish</Badge>;
+    return <Badge tone="warning">In review</Badge>;
   }
   return <Badge tone="critical">Rejected</Badge>;
 };

@@ -1,4 +1,4 @@
-import { Modal, TitleBar } from "@shopify/app-bridge-react";
+import { Modal, TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import {
   AppProvider,
   BlockStack,
@@ -25,6 +25,7 @@ export const PublishProductModal = ({
   const [rangeValue, setRangeValue] = useState(60);
   const [textFieldValue, setTextFieldValue] = useState("2.00");
   const [dateValue, setDateValue] = useState<Date>(new Date());
+  const appBridge = useAppBridge();
 
   const onDateChange = useCallback((value: Date) => setDateValue(value), []);
   const handleTextFieldChange = useCallback(
@@ -43,6 +44,9 @@ export const PublishProductModal = ({
       COGS: +textFieldValue,
       discount: rangeValue,
       publishStartAt: new Date(dateValue).toISOString(),
+    });
+    appBridge.toast.show("The product has been sent for publishing.", {
+      duration: 5000,
     });
     revalidatePage();
 

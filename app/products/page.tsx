@@ -95,7 +95,7 @@ function Products() {
 
   return (
     <Page
-      title="Inventory"
+      title="Products"
       subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing eli."
     >
       <BlockStack gap="500">

@@ -64,8 +64,10 @@ export const InventoryTable = ({
         <IndexTable.Cell>
           <ProductStatusBadge status={status} />
         </IndexTable.Cell>
-        <IndexTable.Cell>${COGS || 0}</IndexTable.Cell>
-        <IndexTable.Cell>{SKU}</IndexTable.Cell>
+        <IndexTable.Cell className="!text-center">
+          {COGS ? `$${COGS}` : "-"}
+        </IndexTable.Cell>
+        <IndexTable.Cell>{SKU || "-"}</IndexTable.Cell>
         <IndexTable.Cell>{discount}%</IndexTable.Cell>
         <IndexTable.Cell>
           <ProductActionButton

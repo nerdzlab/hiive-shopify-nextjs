@@ -1,5 +1,5 @@
-import { ProductsFilters } from "@/app/inventory/page";
-import { defaultProductsFilters } from "@/app/inventory/utils";
+import { ProductsFilters } from "@/app/products/page";
+import { defaultProductsFilters } from "@/app/products/utils";
 import {
   FormLayout,
   Select,

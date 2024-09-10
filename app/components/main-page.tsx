@@ -18,6 +18,7 @@ import { doTokenExchange } from "../actions";
 
 import { useRouter } from "next/navigation";
 import { useBoolean } from "@/hooks";
+import { PRODUCTS } from "@/utils/routes";
 
 const GET_SHOP = graphql(`
   #graphql
@@ -40,7 +41,7 @@ export default function Home({ shop }: { shop: string }) {
   const checkForToken = useCallback(() => {
     const apiToken = localStorage.getItem("user-token");
     if (apiToken) {
-      router.push("/inventory");
+      router.push(PRODUCTS);
     } else {
       router.push("/login");
     }
