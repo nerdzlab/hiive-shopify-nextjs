@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         requestId,
       });
 
+      setBrandStatus(response.data.brand.approvalStatus);
       setToken(response.data.accessToken);
     } catch (error) {
       //

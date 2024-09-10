@@ -4,7 +4,6 @@ import axiosInstance from "../axios";
 export const postPublishProduct = async (data: any) => {
   try {
     const token = localStorage.getItem("user-token");
-    console.log(data);
     const response = await axiosInstance.post("/product/publish", data, {
       headers: {
         Authorization: `Bearer ${token?.replaceAll(`"`, "")}`,

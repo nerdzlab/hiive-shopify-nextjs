@@ -23,11 +23,10 @@ const withAuth = <T extends {}>(WrappedComponent: React.ComponentType<T>) => {
       isBrandDeclined,
       allowUser,
     } = auth || {};
-
     useEffect(() => {
       const isAuthRoute = AUTH_ROUTES.includes(window.location.pathname);
 
-      if (!loading && isNoBrand) {
+      if (!loading && token && isNoBrand) {
         router.replace(BRAND_VERIFY);
       } else if (!loading && (isBrandPending || isBrandDeclined)) {
         router.replace(BRAND_STATUS);
