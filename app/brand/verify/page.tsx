@@ -105,14 +105,13 @@ function BrandVerify() {
         formValues,
         shopifyAccessToken: result.data.accessToken,
       })
-        .then((data) => {
+        .then(() => {
           const toastTitle = isEdit
             ? "The Brand Form has been successfully changed."
             : "Brand Creation Form is successfully sent.";
           appBridge.toast.show(toastTitle, {
             duration: 5000,
           });
-          return postProductApprove(data?.id);
         })
         .then(() => {
           router.push("/brand/status");
