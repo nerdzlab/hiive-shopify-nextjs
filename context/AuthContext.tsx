@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          setBrandStatus(response.data.approvalStatus);
+          setBrandStatus(response?.data?.approvalStatus);
           setLoading(false);
         })
         .catch((error) => {
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         requestId,
       });
 
-      setBrandStatus(response.data.brand.approvalStatus);
+      setBrandStatus(response?.data?.brand?.approvalStatus);
       setToken(response.data.accessToken);
     } catch (error) {
       //
