@@ -19,8 +19,15 @@ import { useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import useSWR from "swr";
 
-const BrandReviewStatus = ({ status }: { status: BrandApprovalStatus }) => {
+const BrandReviewStatus = ({
+  status,
+  declineReason,
+}: {
+  declineReason?: string | null;
+  status: BrandApprovalStatus;
+}) => {
   const router = useRouter();
+  const declineMessage = `Reason of rejection: ${declineReason}.`;
 
   const onResubmit = () => {
     router.push("/brand/verify");
@@ -31,23 +38,20 @@ const BrandReviewStatus = ({ status }: { status: BrandApprovalStatus }) => {
       <BlockStack inlineAlign="center" gap="400">
         <BlockStack inlineAlign="center" gap="400">
           <BlockStack inlineAlign="center" gap="400">
-            <Badge tone="critical">Rejected</Badge>
-            <Badge tone="critical">
-              Reason of rejection: “Lorem ipsum dolor sit amet, consectetur
-              iscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore”.
-            </Badge>
+            <Badge tone="critical">Application Rejected</Badge>
+            <Badge tone="critical">{declineMessage}</Badge>
           </BlockStack>
           <Text variant="bodyLg" as="p">
-            Your application has been rejected. Please check your email for more
-            details. You can submit your brand for approval once again.
+            Unfortunately, your application has been rejected. Please check your
+            email for further details. You can revise your information and
+            resubmit your brand for approval.
           </Text>
         </BlockStack>
         <Button size="large" variant="primary" onClick={onResubmit}>
           Resubmit the Form
         </Button>
         <FooterHelp>
-          Do you have any questions?{" "}
+          If you have any questions, feel free to{" "}
           <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
             Contact Hiive
           </Link>
@@ -60,10 +64,14 @@ const BrandReviewStatus = ({ status }: { status: BrandApprovalStatus }) => {
     <BlockStack inlineAlign="center" gap="400">
       <Badge tone="warning">Pending for review</Badge>
       <Text variant="bodyLg" as="p">
-        Your form has been sent. We&apos;ll contact you soon.
+        Your application is under review
+      </Text>
+      <Text variant="bodyLg" as="p">
+        Thank you for submitting your form. We’re currently reviewing your
+        details and will be in touch with you soon.
       </Text>
       <FooterHelp>
-        Do you have any questions?{" "}
+        If you have any questions in the meantime, please feel free to{" "}
         <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
           Contact Hiive
         </Link>
@@ -114,7 +122,10 @@ function BrandStatus() {
                   <Text variant="headingMd" as="h6" alignment="center">
                     Status of the {data?.brandName} Application
                   </Text>
-                  <BrandReviewStatus status={data.approvalStatus} />
+                  <BrandReviewStatus
+                    status={data.approvalStatus}
+                    declineReason={data.declineReason}
+                  />
                 </BlockStack>
               </BlockStack>
             </div>

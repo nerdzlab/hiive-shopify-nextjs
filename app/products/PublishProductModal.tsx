@@ -130,7 +130,7 @@ export const PublishProductModal = ({
         >
           <BlockStack gap="200">
             <Text as="h3" variant="headingSm" fontWeight="medium">
-              Deactivated reports
+              Note
             </Text>
             <Text as="p">
               Product approval time could take up to 7 working days. When the

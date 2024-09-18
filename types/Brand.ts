@@ -6,6 +6,7 @@ export enum BrandApprovalStatus {
 
 export type Brand = {
   approvalStatus: BrandApprovalStatus;
+  declineReason: string | null;
   brandLogoUrl: string;
   brandName: string;
   createdAt: Date;

@@ -21,7 +21,7 @@ import withAuth from "../components/WithAuth/WithAuth";
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email("Invalid email address")
+    .email("Email is incorrect. Please check it and try again.")
     .required("Email is required"),
 });
 
@@ -81,7 +81,7 @@ function LoginPage() {
                   Authorization
                 </Text>
                 <Text variant="bodyMd" as="p">
-                  Please fill out this form, and we&apos;`ll contact you soon.
+                  Enter your email, and we&apos;ll send you a verification code.
                 </Text>
               </div>
               <Form onSubmit={onSubmit}>

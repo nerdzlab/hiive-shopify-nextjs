@@ -179,7 +179,7 @@ function BrandVerify() {
                 Brand Onboarding Form
               </Text>
               <Text variant="bodyMd" as="p">
-                Lorem ipsum dolor sit amet, consectetur adipiscing eli.
+                Fill out this form, and we&apos;ll get back to you soon.
               </Text>
             </BlockStack>
           )}
