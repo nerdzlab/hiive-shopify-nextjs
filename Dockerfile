@@ -1,8 +1,8 @@
-FROM arm64v8/node:20
+FROM node:20.11.0
 
 WORKDIR /usr/src/app
 
-RUN npm install pnpm@8
+RUN npm install -g pnpm@8
 
 COPY . .
 
