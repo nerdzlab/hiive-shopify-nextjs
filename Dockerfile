@@ -2,7 +2,7 @@ FROM node:20.11.0
 
 WORKDIR /usr/src/app
 
-RUN npm install -g pnpm@8
+RUN npm install pnpm@8
 
 COPY . .
 
