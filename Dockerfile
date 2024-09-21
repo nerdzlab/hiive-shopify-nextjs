@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:20.11.0
+FROM arm64v8/node:20
 
 WORKDIR /usr/src/app
 
