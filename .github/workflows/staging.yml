@@ -4,6 +4,7 @@ on:
   push:
     branches: 
       - main
+      - actions-update
       
 
 permissions:
@@ -47,7 +48,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }} .
+          docker build --platform linux/arm64 -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }} .
           docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }}
 
       - name: Update service
