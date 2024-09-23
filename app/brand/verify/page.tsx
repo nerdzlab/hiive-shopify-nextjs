@@ -202,6 +202,7 @@ function BrandVerify() {
                   autoComplete="off"
                   name="person"
                   error={errors?.person}
+                  placeholder="Full Name"
                   label="Contact Person Name *"
                   value={formValues?.person}
                   onChange={handleFullNameChange}
@@ -210,6 +211,7 @@ function BrandVerify() {
                   label="Contact Phone Number *"
                   autoComplete="off"
                   name="phoneNumber"
+                  placeholder="+1 xxx"
                   error={errors?.phoneNumber}
                   onChange={handlePhoneChange}
                   value={formValues?.phoneNumber}
@@ -218,12 +220,14 @@ function BrandVerify() {
                   type="text"
                   autoComplete="off"
                   label="Brand Website *"
+                  placeholder="Website URL"
                   name="websiteUrl"
                   error={errors?.websiteUrl}
                   onChange={handleWebsiteChange}
                   value={formValues?.websiteUrl}
                 />
                 <TextField
+                  placeholder="Brand/Shop Name"
                   type="text"
                   autoComplete="off"
                   name="brandName"
