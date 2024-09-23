@@ -20,6 +20,7 @@ type AuthContext = {
   isBrandDeclined?: boolean;
   isBrandPending?: boolean;
   login: (textFieldValue: string, requestId: string) => Promise<void>;
+  updateBrandStatus: (status: BrandApprovalStatus) => void;
 };
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
@@ -27,7 +28,9 @@ const AuthContext = createContext<AuthContext | undefined>(undefined);
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [token, setToken] = useRecoilState(userToken);
   const [loading, setLoading] = useState(true);
-  const [brandStatus, setBrandStatus] = useState(null);
+  const [brandStatus, setBrandStatus] = useState<BrandApprovalStatus | null>(
+    null,
+  );
 
   useEffect(() => {
     if (token) {
@@ -62,6 +65,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const updateBrandStatus = (status: BrandApprovalStatus) => {
+    setBrandStatus(status);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -73,6 +80,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         isBrandPending: brandStatus === BrandApprovalStatus.Pending,
         isNoBrand: !brandStatus,
         login: onLogin,
+        updateBrandStatus,
       }}
     >
       {children}

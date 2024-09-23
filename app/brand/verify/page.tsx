@@ -32,6 +32,7 @@ import { postProductApprove } from "@/app/api/services/Product.service";
 import { ConfirmBrandChangeModal } from "./ConfirmBrandChangeModal";
 import useSWR from "swr";
 import { swrFetcher } from "@/app/api/swrFetcher";
+import { useAuth } from "@/context/AuthContext";
 
 const styles = {
   deleteIconHover: {
@@ -53,7 +54,7 @@ const validationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
     .matches(
-      /^\+?[1-9]\d{1,14}$/,
+      /^\+?[1-9]\d{10,11}$/,
       "Phone number is incorrect. Please check it and try again",
     )
     .required("Phone number is required"),
@@ -72,6 +73,8 @@ function BrandVerify({ data }) {
   const searchParams = useSearchParams();
   const isEdit = searchParams.get("edit") === "true";
   const token = useRecoilValue(userToken);
+  const auth = useAuth();
+  const { updateBrandStatus } = auth || {};
   const [errors, setErrors] = useState<BrandFormValues>({});
   const [loading, toggleLoading] = useBoolean();
   const [isHovered, toggle] = useBoolean();
@@ -114,13 +117,14 @@ function BrandVerify({ data }) {
         formValues,
         shopifyAccessToken: result.data.accessToken,
       })
-        .then(() => {
+        .then((data: Brand) => {
           const toastTitle = isEdit
             ? "The Brand Form has been successfully changed."
             : "Brand Creation Form is successfully sent.";
           appBridge.toast.show(toastTitle, {
             duration: 5000,
           });
+          updateBrandStatus && updateBrandStatus(data.approvalStatus);
         })
         .then(() => {
           if (!isEdit) {
@@ -140,6 +144,8 @@ function BrandVerify({ data }) {
           {},
         );
         setErrors(errors);
+      } else {
+        setErrors(error);
       }
     }
 
@@ -173,6 +179,8 @@ function BrandVerify({ data }) {
   const onLogoDelete = useCallback(() => {
     setFormValue((state) => ({ ...state, logo: undefined }));
   }, []);
+
+  console.log("errors", errors);
 
   return (
     <Page narrowWidth={!isEdit}>
