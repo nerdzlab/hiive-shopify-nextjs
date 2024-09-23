@@ -147,6 +147,7 @@ function NewPage() {
                     label="Code"
                     name="code"
                     type="number"
+                    step={0}
                     error={errors?.code}
                     value={textFieldValue}
                     onChange={handleTextFieldChange}
