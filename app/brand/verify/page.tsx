@@ -14,6 +14,7 @@ import {
   DropZone,
   Thumbnail,
   Form,
+  Bleed,
 } from "@shopify/polaris";
 import {
   ChevronLeftIcon,
@@ -50,6 +51,8 @@ const styles = {
   },
 };
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
 const validationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
@@ -64,6 +67,14 @@ const validationSchema = yup.object().shape({
     .required("Website URL is required"),
   person: yup.string().required("Person is required"),
   brandName: yup.string().required("Person is required"),
+  logo: yup
+    .mixed()
+    .required("VALIDATION_FIELD_REQUIRED")
+    .test(
+      "is-valid-size",
+      "Max allowed size is 10KB",
+      (value) => value && value.size <= MAX_FILE_SIZE,
+    ),
 });
 
 function BrandVerify({ data }) {
@@ -180,8 +191,6 @@ function BrandVerify({ data }) {
     setFormValue((state) => ({ ...state, logo: undefined }));
   }, []);
 
-  console.log("errors", errors);
-
   return (
     <Page narrowWidth={!isEdit}>
       <Layout.Section>
@@ -264,6 +273,13 @@ function BrandVerify({ data }) {
                   You can upload jpg, jpeg, or png format. Must be equal or less
                   than 10MB.
                 </Text>
+                {errors?.logo && (
+                  <Bleed marginBlock="400">
+                    <Text variant="bodySm" as="p" tone="critical">
+                      Max allowed size is 10KB
+                    </Text>
+                  </Bleed>
+                )}
                 {formValues?.logo ? (
                   <div
                     style={{
