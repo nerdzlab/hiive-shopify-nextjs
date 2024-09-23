@@ -23,5 +23,5 @@ export type BrandFormValues = {
   websiteUrl?: string;
   phoneNumber?: string;
   brandName?: string;
-  logo?: File;
+  logo?: File | string;
 };

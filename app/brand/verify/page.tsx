@@ -73,12 +73,11 @@ const validationSchema = yup.object().shape({
     .test(
       "is-valid-size",
       "Max allowed size is 10KB",
-      (value) => value && value.size <= MAX_FILE_SIZE,
+      (value: any) => value && value.size <= MAX_FILE_SIZE,
     ),
 });
 
-function BrandVerify({ data }) {
-  console.log(data);
+function BrandVerify({ data }: { data: Brand }) {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -143,7 +142,7 @@ function BrandVerify({ data }) {
           }
         })
         .catch((error) => console.error(error));
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof yup.ValidationError) {
         const errors = error.inner.reduce<{ [key: string]: string }>(
           (acc, err) => {
@@ -292,7 +291,11 @@ function BrandVerify({ data }) {
                   >
                     <Thumbnail
                       size="medium"
-                      alt={formValues?.logo?.name}
+                      alt={
+                        formValues?.logo instanceof File
+                          ? formValues?.logo?.name
+                          : ""
+                      }
                       source={
                         formValues?.logo instanceof File
                           ? window.URL.createObjectURL(formValues?.logo)

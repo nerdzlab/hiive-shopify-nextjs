@@ -18,6 +18,7 @@ function Overview() {
   const router = useRouter();
 
   const onSettingsClick = () => router.push("/settings");
+  const onManageProductsClick = () => router.push("/products");
 
   return (
     <Page fullWidth title="Hiive Channel Overview">
@@ -30,6 +31,7 @@ function Overview() {
                 title="Products on Hiive"
                 description="4 products are available on Hiive"
                 buttonTitle="Manage products"
+                buttonAction={onManageProductsClick}
               />
             </Card>
           </Grid.Cell>
