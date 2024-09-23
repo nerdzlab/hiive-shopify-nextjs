@@ -27,9 +27,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
 import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
-import { BrandFormValues } from "@/types/Brand";
+import { Brand, BrandFormValues } from "@/types/Brand";
 import { postProductApprove } from "@/app/api/services/Product.service";
 import { ConfirmBrandChangeModal } from "./ConfirmBrandChangeModal";
+import useSWR from "swr";
+import { swrFetcher } from "@/app/api/swrFetcher";
 
 const styles = {
   deleteIconHover: {
@@ -63,7 +65,8 @@ const validationSchema = yup.object().shape({
   brandName: yup.string().required("Person is required"),
 });
 
-function BrandVerify() {
+function BrandVerify({ data }) {
+  console.log(data);
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -73,7 +76,13 @@ function BrandVerify() {
   const [loading, toggleLoading] = useBoolean();
   const [isHovered, toggle] = useBoolean();
   const appBridge = useAppBridge();
-  const [formValues, setFormValue] = useState<BrandFormValues>({});
+  const [formValues, setFormValue] = useState<BrandFormValues>({
+    person: data?.person,
+    websiteUrl: data?.websiteUrl,
+    phoneNumber: data?.phoneNumber,
+    brandName: data?.brandName,
+    logo: data?.brandLogoUrl,
+  });
 
   const preventFormSave = (callback: () => void) => {
     if (isEdit) {
@@ -114,7 +123,9 @@ function BrandVerify() {
           });
         })
         .then(() => {
-          router.push("/brand/status");
+          if (!isEdit) {
+            router.push("/brand/status");
+          }
         })
         .catch((error) => console.error(error));
     } catch (error) {
@@ -258,7 +269,11 @@ function BrandVerify() {
                     <Thumbnail
                       size="medium"
                       alt={formValues?.logo?.name}
-                      source={window.URL.createObjectURL(formValues?.logo)}
+                      source={
+                        formValues?.logo instanceof File
+                          ? window.URL.createObjectURL(formValues?.logo)
+                          : data?.brandLogoUrl
+                      }
                     />
                     {isHovered && (
                       <div
@@ -314,9 +329,24 @@ function BrandVerify() {
   );
 }
 
-const BrandVerifyPage = () => (
-  <Suspense>
-    <BrandVerify />
-  </Suspense>
-);
+const BrandVerifyPage = () => {
+  const token = useRecoilValue(userToken);
+  const { data, error, isLoading } = useSWR<Brand>(
+    ["/brand/me", token],
+    swrFetcher,
+    {
+      shouldRetryOnError: false,
+    },
+  );
+
+  if (isLoading || !data) {
+    return null;
+  }
+
+  return (
+    <Suspense>
+      <BrandVerify data={data} />
+    </Suspense>
+  );
+};
 export default BrandVerifyPage;
