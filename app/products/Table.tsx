@@ -83,7 +83,7 @@ export const InventoryTable = ({
 
   const emptyStateMarkup = (
     <EmptySearchResult
-      title={"No customers yet"}
+      title={"No products yet"}
       description={"Try changing the filters or search term"}
       withIllustration
     />
@@ -96,7 +96,7 @@ export const InventoryTable = ({
       headings={[
         tableHeaderTitle("Picture"),
         tableHeaderTitle("Product Title"),
-        tableHeaderTitle("Product Price"),
+        tableHeaderTitle("Retail Price"),
         tableHeaderTitle("Amount"),
         tableHeaderTitle("Status"),
         tableHeaderTitle("COGS", "Cost of goods sold"),

@@ -187,7 +187,7 @@ function BrandVerify() {
             {!isEdit && (
               <>
                 <Text variant="heading2xl" as="h2">
-                  Brand Creation Form
+                  Brand Onboarding Form
                 </Text>
                 <Text variant="bodyMd" as="p">
                   Fill out this form, and we&apos;ll get back to you soon.

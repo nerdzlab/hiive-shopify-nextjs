@@ -60,7 +60,7 @@ export const PublishProductModal = ({
   return (
     <Modal id="my-modal">
       <AppProvider i18n={{}}>
-        <TitleBar title="Publish product"></TitleBar>
+        <TitleBar title="Publish product" />
 
         <Box padding="600">
           <BlockStack gap="600">

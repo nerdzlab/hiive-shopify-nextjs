@@ -66,14 +66,14 @@ const BrandReviewStatus = ({
       <Text variant="bodyLg" as="p">
         Your application is under review
       </Text>
-      <Text variant="bodyLg" as="p">
+      <Text variant="bodyLg" as="p" alignment="center">
         Thank you for submitting your form. We’re currently reviewing your
         details and will be in touch with you soon.
       </Text>
-      <FooterHelp>
+      <FooterHelp align="center">
         If you have any questions in the meantime, please feel free to{" "}
         <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
-          Contact Hiive
+          <p className="text-center">Contact Hiive</p>
         </Link>
       </FooterHelp>
     </BlockStack>
