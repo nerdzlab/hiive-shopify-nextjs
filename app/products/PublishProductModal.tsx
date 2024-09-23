@@ -50,6 +50,10 @@ export const PublishProductModal = ({
     });
     revalidatePage();
 
+    hideModal();
+  };
+
+  const hideModal = () => {
     (
       document.getElementById("my-modal") as HTMLElement & {
         hide: () => void;
@@ -149,7 +153,7 @@ export const PublishProductModal = ({
               >
                 Publish
               </Button>
-              <Button onClick={() => {}} accessibilityLabel="Cancel">
+              <Button onClick={hideModal} accessibilityLabel="Cancel">
                 Cancel
               </Button>
             </ButtonGroup>
