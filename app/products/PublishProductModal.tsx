@@ -5,16 +5,54 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Icon,
   InlineStack,
   RangeSlider,
   Text,
   TextField,
+  Tooltip,
 } from "@shopify/polaris";
 import { useCallback, useState } from "react";
 import { postPublishProduct } from "../api/services/Product.service";
 import { useRecoilValue } from "recoil";
 import { activeProductModal } from "@/atoms/activeProductModal";
 import { DatePickerSingle } from "../components/DatePicker/DatePickerSingle";
+import { InfoIcon } from "@shopify/polaris-icons";
+
+const InfoTooltip = ({
+  title,
+  message,
+  anchor,
+}: {
+  title?: string;
+  message: string;
+  anchor: string;
+}) => (
+  <div>
+    <InlineStack wrap={false} gap="200">
+      <Text as="p">{anchor}</Text>
+      <Tooltip
+        width="wide"
+        padding="400"
+        active
+        content={
+          <div>
+            {title && (
+              <Text as="h3" variant="headingSm" fontWeight="bold">
+                {title}
+              </Text>
+            )}
+            <Text as="p">{message}</Text>
+          </div>
+        }
+      >
+        <Text fontWeight="bold" as="span">
+          <Icon source={InfoIcon} />
+        </Text>
+      </Tooltip>
+    </InlineStack>
+  </div>
+);
 
 export const PublishProductModal = ({
   revalidatePage,
@@ -64,25 +102,23 @@ export const PublishProductModal = ({
   return (
     <Modal id="my-modal">
       <AppProvider i18n={{}}>
-        <TitleBar title="Publish product" />
-
         <Box padding="600">
           <BlockStack gap="600">
             <Text as="p" variant="bodyMd">
-              Please select the date range when the product will be displayed in
-              the Hiive app.
+              Set the date range, COGS, and discount for your product to be
+              displayed on the Hiive app.
             </Text>
             <InlineStack wrap={false}>
               <DatePickerSingle onChange={onDateChange} />
             </InlineStack>
-            <InlineStack wrap={false}>
+            <InlineStack wrap={false} gap="400">
               <div
                 style={{
-                  maxWidth: 170,
+                  maxWidth: 120,
                 }}
               >
                 <TextField
-                  label="Specify COGS"
+                  label="Retail Price"
                   type="number"
                   value={textFieldValue}
                   onChange={handleTextFieldChange}
@@ -90,6 +126,41 @@ export const PublishProductModal = ({
                   autoComplete="off"
                 />
               </div>
+              <div
+                style={{
+                  maxWidth: 120,
+                }}
+              >
+                <TextField
+                  label={
+                    <InfoTooltip
+                      title="COGS"
+                      message="Cost of goods sold"
+                      anchor="Specify COGS"
+                    />
+                  }
+                  type="number"
+                  value={textFieldValue}
+                  onChange={handleTextFieldChange}
+                  prefix="$"
+                  autoComplete="off"
+                />
+              </div>
+
+              <TextField
+                label={
+                  <InfoTooltip
+                    message="Quantity of goods for this offer"
+                    anchor="Allowed Inventory"
+                  />
+                }
+                type="number"
+                value={textFieldValue}
+                onChange={handleTextFieldChange}
+                prefix="$"
+                autoSize
+                autoComplete="off"
+              />
             </InlineStack>
             <div className="border border-solid border-[#BEBDBE] rounded-md p-6">
               <BlockStack gap="600">
@@ -109,9 +180,26 @@ export const PublishProductModal = ({
                   prefix={<p>min 30%</p>}
                   suffix={<p>max 100%</p>}
                 />
-                <InlineStack align="end">
+                <InlineStack align="space-between">
+                  <Box
+                    borderRadius="200"
+                    padding="400"
+                    background="bg-surface-emphasis"
+                  >
+                    <Text as="p">
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#6851E2",
+                        }}
+                      >
+                        $12.00{" "}
+                      </span>
+                      in Hiive Cash will be used here!
+                    </Text>
+                  </Box>
                   <BlockStack align="end">
-                    <Text as="p" alignment="end">
+                    <Text as="p" alignment="end" fontWeight="bold">
                       Final price with discount
                     </Text>
                     <Text as="h3" variant="headingMd" alignment="end">
@@ -144,22 +232,21 @@ export const PublishProductModal = ({
           </BlockStack>
         </Box>
         <Box paddingBlock="600" paddingInline="600">
-          <InlineStack align="end">
-            <ButtonGroup>
-              <Button
-                onClick={onSubmit}
-                variant="primary"
-                accessibilityLabel="Publish"
-              >
-                Publish
-              </Button>
-              <Button onClick={hideModal} accessibilityLabel="Cancel">
-                Cancel
-              </Button>
-            </ButtonGroup>
+          <InlineStack align="space-between">
+            <Button onClick={hideModal} accessibilityLabel="Cancel">
+              Cancel
+            </Button>
+            <Button
+              onClick={onSubmit}
+              variant="primary"
+              accessibilityLabel="Publish"
+            >
+              Publish
+            </Button>
           </InlineStack>
         </Box>
       </AppProvider>
+      <TitleBar title="Publish Your Product Details" />
     </Modal>
   );
 };

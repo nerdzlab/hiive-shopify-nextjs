@@ -95,8 +95,8 @@ function Products() {
 
   return (
     <Page
-      title="Products"
-      subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing eli."
+      title="Manage Products"
+      subtitle="Update, publish, or unpublish your products and track their status."
     >
       <BlockStack gap="500">
         <CardWithHeaderActions setFilters={setFilters} filters={filters} />

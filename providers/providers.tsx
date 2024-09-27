@@ -16,7 +16,7 @@ const SideBar = () => {
   return allowUser ? (
     <ui-nav-menu>
       <Link href={OVERVIEW}>Overview</Link>
-      <Link href={PRODUCTS}>Products</Link>
+      <Link href={PRODUCTS}>Manage Products</Link>
       <Link href={SETTINGS}>Settings</Link>
     </ui-nav-menu>
   ) : null;
