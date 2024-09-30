@@ -31,10 +31,10 @@ function LoginPage() {
   const [errors, setErrors] = useState<{ email?: string }>({});
   const [loading, toggle] = useBoolean();
 
-  const handleTextFieldChange = useCallback(
-    (value: string) => setTextFieldValue(value),
-    [],
-  );
+  const handleTextFieldChange = useCallback((value: string) => {
+    setErrors({});
+    setTextFieldValue(value);
+  }, []);
 
   const onSubmit = async () => {
     toggle.on();
