@@ -323,6 +323,7 @@ function BrandVerify({ data }: { data: Brand }) {
                       allowMultiple={false}
                       variableHeight
                       type="image"
+                      accept="image/png, image/jpeg, image/jpg"
                       outline={false}
                       onDrop={handleDropZoneDrop}
                     >
