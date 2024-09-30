@@ -61,9 +61,11 @@ export const PublishProductModal = ({
 }) => {
   const modalData = useRecoilValue(activeProductModal);
   const [rangeValue, setRangeValue] = useState(60);
-  const [cogs, setCogs] = useState();
-  const [retailPrice, setRetailPrice] = useState();
-  const [allowedInventory, setAllowedInventory] = useState();
+  const [cogs, setCogs] = useState<string | undefined>();
+  const [retailPrice, setRetailPrice] = useState<string | undefined>();
+  const [allowedInventory, setAllowedInventory] = useState<
+    string | undefined
+  >();
   const [dateValue, setDateValue] = useState<Date>(new Date());
   const appBridge = useAppBridge();
 
