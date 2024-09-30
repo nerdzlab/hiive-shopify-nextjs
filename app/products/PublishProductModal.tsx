@@ -61,13 +61,23 @@ export const PublishProductModal = ({
 }) => {
   const modalData = useRecoilValue(activeProductModal);
   const [rangeValue, setRangeValue] = useState(60);
-  const [textFieldValue, setTextFieldValue] = useState("2.00");
+  const [cogs, setCogs] = useState();
+  const [retailPrice, setRetailPrice] = useState();
+  const [allowedInventory, setAllowedInventory] = useState();
   const [dateValue, setDateValue] = useState<Date>(new Date());
   const appBridge = useAppBridge();
 
   const onDateChange = useCallback((value: Date) => setDateValue(value), []);
   const handleTextFieldChange = useCallback(
-    (value: string) => setTextFieldValue(value),
+    (value: string) => setCogs(value),
+    [],
+  );
+  const handleRetailFieldChange = useCallback(
+    (value: string) => setRetailPrice(value),
+    [],
+  );
+  const handleInventoryFieldChange = useCallback(
+    (value: string) => setAllowedInventory(value),
     [],
   );
 
@@ -76,10 +86,18 @@ export const PublishProductModal = ({
     [],
   );
 
+  const clearState = () => {
+    setAllowedInventory(undefined);
+    setRetailPrice(undefined);
+    setCogs(undefined);
+  };
+
   const onSubmit = async () => {
     await postPublishProduct({
+      retailPrice: Number(retailPrice),
+      allowedInventory: Number(allowedInventory),
       productId: String(modalData.id),
-      COGS: +textFieldValue,
+      COGS: Number(cogs),
       discount: rangeValue,
       publishStartAt: new Date(dateValue).toISOString(),
     });
@@ -100,7 +118,7 @@ export const PublishProductModal = ({
   };
 
   return (
-    <Modal id="my-modal">
+    <Modal id="my-modal" onHide={clearState}>
       <AppProvider i18n={{}}>
         <Box padding="600">
           <BlockStack gap="600">
@@ -120,8 +138,8 @@ export const PublishProductModal = ({
                 <TextField
                   label="Retail Price"
                   type="number"
-                  value={textFieldValue}
-                  onChange={handleTextFieldChange}
+                  value={retailPrice}
+                  onChange={handleRetailFieldChange}
                   prefix="$"
                   autoComplete="off"
                 />
@@ -140,7 +158,7 @@ export const PublishProductModal = ({
                     />
                   }
                   type="number"
-                  value={textFieldValue}
+                  value={cogs}
                   onChange={handleTextFieldChange}
                   prefix="$"
                   autoComplete="off"
@@ -155,9 +173,8 @@ export const PublishProductModal = ({
                   />
                 }
                 type="number"
-                value={textFieldValue}
-                onChange={handleTextFieldChange}
-                prefix="$"
+                value={allowedInventory}
+                onChange={handleInventoryFieldChange}
                 autoSize
                 autoComplete="off"
               />
@@ -239,6 +256,7 @@ export const PublishProductModal = ({
             <Button
               onClick={onSubmit}
               variant="primary"
+              disabled={!retailPrice || !cogs || !allowedInventory}
               accessibilityLabel="Publish"
             >
               Publish
