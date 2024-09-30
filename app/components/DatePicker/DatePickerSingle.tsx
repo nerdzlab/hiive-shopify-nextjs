@@ -79,6 +79,7 @@ export function DatePickerSingle({
           <DatePicker
             month={month}
             year={year}
+            disableDatesBefore={new Date(Date.now() - 86400000)}
             selected={selectedDate}
             onMonthChange={handleMonthChange}
             onChange={handleDateSelection}
