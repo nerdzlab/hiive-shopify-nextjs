@@ -36,7 +36,7 @@ const InfoTooltip = ({
       <Tooltip
         width="wide"
         padding="400"
-        active
+        // active
         content={
           <div>
             {title && (
@@ -85,7 +85,9 @@ export const PublishProductModal = ({
         } else {
           setErrors({});
         }
-        setRangeValue(Number(+value / +modalData.retailPrice) * 100);
+        setRangeValue(
+          +(Number(+value / +modalData.retailPrice) * 100).toFixed(2),
+        );
       }
       setPrice(value);
     },
@@ -138,7 +140,9 @@ export const PublishProductModal = ({
   useEffect(() => {
     if (modalData.retailPrice) {
       setRetailPrice(modalData.retailPrice);
-      setPrice(String((+modalData.retailPrice / 100) * +rangeValue));
+      setPrice(
+        String(((+modalData.retailPrice / 100) * +rangeValue).toFixed(2)),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalData]);
