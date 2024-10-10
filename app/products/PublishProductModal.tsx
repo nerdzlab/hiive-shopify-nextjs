@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Modal, TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import {
   AppProvider,
@@ -13,12 +14,12 @@ import {
   TextField,
   Tooltip,
 } from "@shopify/polaris";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { postPublishProduct } from "../api/services/Product.service";
+import en from "@shopify/polaris/locales/en.json";
 import { useRecoilValue } from "recoil";
-import { activeProductModal } from "@/atoms/activeProductModal";
-import { DatePickerSingle } from "../components/DatePicker/DatePickerSingle";
 import { InfoIcon } from "@shopify/polaris-icons";
+import { activeProductModal } from "@/atoms/activeProductModal";
+import { postPublishProduct } from "../api/services/Product.service";
+import { DatePickerSingle } from "../components/DatePicker/DatePickerSingle";
 
 const InfoTooltip = ({
   title,
@@ -152,7 +153,7 @@ export const PublishProductModal = ({
 
   return (
     <Modal id="my-modal" onHide={clearState}>
-      <AppProvider i18n={{}}>
+      <AppProvider i18n={en}>
         <Box padding="600">
           <BlockStack gap="600">
             <Text as="p" variant="bodyMd">
