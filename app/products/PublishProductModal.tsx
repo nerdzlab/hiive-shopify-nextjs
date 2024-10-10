@@ -1,18 +1,19 @@
 import { Modal, TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import {
   AppProvider,
+  Bleed,
   BlockStack,
   Box,
   Button,
-  ButtonGroup,
   Icon,
+  InlineError,
   InlineStack,
   RangeSlider,
   Text,
   TextField,
   Tooltip,
 } from "@shopify/polaris";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { postPublishProduct } from "../api/services/Product.service";
 import { useRecoilValue } from "recoil";
 import { activeProductModal } from "@/atoms/activeProductModal";
@@ -60,20 +61,36 @@ export const PublishProductModal = ({
   revalidatePage: () => void;
 }) => {
   const modalData = useRecoilValue(activeProductModal);
+
   const [rangeValue, setRangeValue] = useState(60);
-  const [cogs, setCogs] = useState<string | undefined>();
-  const [retailPrice, setRetailPrice] = useState<string | undefined>();
+  const [price, setPrice] = useState<string>("0");
+  const [retailPrice, setRetailPrice] = useState<string>("0");
   const [allowedInventory, setAllowedInventory] = useState<
     string | undefined
   >();
   const [dateValue, setDateValue] = useState<Date>(new Date());
+  const [errors, setErrors] = useState<{ price?: string }>({});
   const appBridge = useAppBridge();
+  const minimumPrice = ((Number(modalData.retailPrice) / 100) * 30)?.toFixed(2);
 
   const onDateChange = useCallback((value: Date) => setDateValue(value), []);
   const handleTextFieldChange = useCallback(
-    (value: string) => setCogs(value),
-    [],
+    (value: string) => {
+      if (modalData.retailPrice && value) {
+        const range = Number(+value / +modalData.retailPrice) * 100;
+
+        if (range < 30) {
+          setErrors({ price: `Price should be more then ${minimumPrice}` });
+        } else {
+          setErrors({});
+        }
+        setRangeValue(Number(+value / +modalData.retailPrice) * 100);
+      }
+      setPrice(value);
+    },
+    [modalData.retailPrice, minimumPrice],
   );
+
   const handleRetailFieldChange = useCallback(
     (value: string) => setRetailPrice(value),
     [],
@@ -84,24 +101,30 @@ export const PublishProductModal = ({
   );
 
   const handleRangeSliderChange = useCallback(
-    (value: number) => setRangeValue(value),
-    [],
+    (value: number) => {
+      if (modalData.retailPrice) {
+        setPrice(String((+modalData.retailPrice / 100) * +value));
+      }
+      setRangeValue(value);
+    },
+    [modalData.retailPrice],
   );
 
   const clearState = () => {
     setAllowedInventory(undefined);
-    setRetailPrice(undefined);
-    setCogs(undefined);
+    setRangeValue(60);
+    setRetailPrice("0");
+    setPrice("0");
   };
 
   const onSubmit = async () => {
     await postPublishProduct({
-      retailPrice: Number(retailPrice),
-      allowedInventory: Number(allowedInventory),
       productId: String(modalData.id),
-      COGS: Number(cogs),
-      discount: rangeValue,
+      price: +price,
+      allowedHiivePoints: Number(+retailPrice - +price),
       publishStartAt: new Date(dateValue).toISOString(),
+      allowedInventory: Number(allowedInventory),
+      retailPrice: Number(retailPrice),
     });
     appBridge.toast.show("The product has been sent for publishing.", {
       duration: 5000,
@@ -110,6 +133,14 @@ export const PublishProductModal = ({
 
     hideModal();
   };
+
+  useEffect(() => {
+    if (modalData.retailPrice) {
+      setRetailPrice(modalData.retailPrice);
+      setPrice(String((+modalData.retailPrice / 100) * +rangeValue));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalData]);
 
   const hideModal = () => {
     (
@@ -138,6 +169,7 @@ export const PublishProductModal = ({
                 }}
               >
                 <TextField
+                  step={0}
                   label="Retail Price"
                   type="number"
                   value={retailPrice}
@@ -160,7 +192,8 @@ export const PublishProductModal = ({
                     />
                   }
                   type="number"
-                  value={cogs}
+                  step={0}
+                  value={price}
                   onChange={handleTextFieldChange}
                   prefix="$"
                   autoComplete="off"
@@ -175,12 +208,18 @@ export const PublishProductModal = ({
                   />
                 }
                 type="number"
+                step={0}
                 value={allowedInventory}
                 onChange={handleInventoryFieldChange}
                 autoSize
                 autoComplete="off"
               />
             </InlineStack>
+            {errors?.price && (
+              <Bleed marginBlock="400">
+                <InlineError message={errors.price} fieldID="price" />
+              </Bleed>
+            )}
             <div className="border border-solid border-[#BEBDBE] rounded-md p-6">
               <BlockStack gap="600">
                 <div>
@@ -212,7 +251,7 @@ export const PublishProductModal = ({
                           color: "#6851E2",
                         }}
                       >
-                        $12.00{" "}
+                        ${Number(+retailPrice - +price).toFixed(2)}{" "}
                       </span>
                       in Hiive Cash will be used here!
                     </Text>
@@ -222,11 +261,7 @@ export const PublishProductModal = ({
                       Final price with discount
                     </Text>
                     <Text as="h3" variant="headingMd" alignment="end">
-                      $
-                      {(
-                        Number(modalData.price) -
-                        (Number(modalData.price) * rangeValue) / 100
-                      ).toFixed(2)}
+                      ${Number(price)?.toFixed(2)}
                     </Text>
                   </BlockStack>
                 </InlineStack>
@@ -258,7 +293,9 @@ export const PublishProductModal = ({
             <Button
               onClick={onSubmit}
               variant="primary"
-              disabled={!retailPrice || !cogs || !allowedInventory}
+              disabled={
+                !retailPrice || !price || !allowedInventory || !!errors?.price
+              }
               accessibilityLabel="Publish"
             >
               Publish

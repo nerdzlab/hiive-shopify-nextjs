@@ -25,7 +25,7 @@ const ProductActionButton = ({
         onClick={() => {
           setId({
             id,
-            price,
+            retailPrice: price,
           });
           (
             document.getElementById("my-modal") as HTMLElement & {

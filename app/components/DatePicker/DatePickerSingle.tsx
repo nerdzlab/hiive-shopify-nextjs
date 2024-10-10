@@ -24,7 +24,7 @@ export function DatePickerSingle({
     month: selectedDate.getMonth(),
     year: selectedDate.getFullYear(),
   });
-  console.log(selectedDate, selectedDate.toLocaleDateString());
+
   const formattedValue = selectedDate.toLocaleDateString().replaceAll("/", ".");
 
   function handleInputValueChange() {
