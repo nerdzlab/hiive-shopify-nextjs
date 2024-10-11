@@ -19,8 +19,8 @@ export default function Products() {
   return (
     <Page
       fullWidth
-      title="Settings"
-      subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing eli."
+      title="Account Settings"
+      subtitle="Update your personal and brand information or review important documents"
     >
       <BlockStack gap="500">
         <Grid columns={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 2 }}>
