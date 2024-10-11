@@ -108,9 +108,12 @@ export const PublishProductModal = ({
       if (modalData.retailPrice) {
         setPrice(String(((+modalData.retailPrice / 100) * +value).toFixed(2)));
       }
+      if (errors?.price) {
+        setErrors({});
+      }
       setRangeValue(value);
     },
-    [modalData.retailPrice],
+    [modalData.retailPrice, errors?.price],
   );
 
   const clearState = () => {

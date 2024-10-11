@@ -1,14 +1,5 @@
 "use client";
-import {
-  BlockStack,
-  Box,
-  Card,
-  Grid,
-  InlineGrid,
-  Layout,
-  Page,
-  Text,
-} from "@shopify/polaris";
+import { BlockStack, Card, Grid, Page } from "@shopify/polaris";
 import { ProductIcon, SettingsIcon } from "@shopify/polaris-icons";
 import { CardWithAction } from "../components/CardWithAction";
 import { useRouter } from "next/navigation";
@@ -16,7 +7,13 @@ import { useRouter } from "next/navigation";
 export default function Products() {
   const router = useRouter();
 
-  const onPrivacyClick = () => router.push("/privacy");
+  const onPrivacyClick = () => {
+    window.open(
+      "https://www.joinhiive.com/privacy-policy",
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
   const onBrandClick = () => router.push("/brand/verify?edit=true");
 
   return (
@@ -31,7 +28,7 @@ export default function Products() {
             <Card>
               <CardWithAction
                 title="Brand Onboarding Form"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscin"
+                description="Edit and manage your brand details for Hiive"
                 buttonTitle="Manage brand form"
                 buttonAction={onBrandClick}
               />
@@ -41,7 +38,7 @@ export default function Products() {
             <Card>
               <CardWithAction
                 title="Privacy Policy"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscin"
+                description="Review how we protect your data and privacy"
                 buttonTitle="Go to Privacy Policy"
                 buttonAction={onPrivacyClick}
               />
