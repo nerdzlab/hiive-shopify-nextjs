@@ -106,7 +106,7 @@ export const PublishProductModal = ({
   const handleRangeSliderChange = useCallback(
     (value: number) => {
       if (modalData.retailPrice) {
-        setPrice(String((+modalData.retailPrice / 100) * +value));
+        setPrice(String(((+modalData.retailPrice / 100) * +value).toFixed(2)));
       }
       setRangeValue(value);
     },
@@ -256,7 +256,7 @@ export const PublishProductModal = ({
                           color: "#6851E2",
                         }}
                       >
-                        ${Number(+retailPrice - +price).toFixed(2)}{" "}
+                        ${Math.round(Number(+retailPrice - +price))}{" "}
                       </span>
                       in Hiive Cash will be used here!
                     </Text>
