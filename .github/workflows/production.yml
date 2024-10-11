@@ -1,0 +1,65 @@
+name: Remote deploy via ssh
+
+on:
+  push:
+    branches: 
+      - production
+      - actions-prod
+      
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    env:
+      AWS_REGION: us-west-2
+      SERVICE: shopify-nextjs
+      ENVIRONMENT: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+
+
+      - name: Set up env file
+        run: |
+          echo "${{ secrets.SHOPIFY_API_KEY_PROD }}" > .env     
+          echo "${{ secrets.SHOPIFY_API_SECRET_PROD }}" >> .env     
+          echo "${{ vars.SHOPIFY_SCOPES }}" >> .env      
+          echo "${{ vars.NEXT_PUBLIC_HIIVE_API_URL_PROD }}" >> .env      
+          echo "${{ secrets.DATABASE_URL_PROD }}" >> .env      
+          echo "${{ secrets.POSTGRES_PASSWORD_PROD }}" >> .env  
+          echo "${{ vars.HOST_PROD }}" >> .env   
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }} .
+          docker push ${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }}
+
+      - name: Update service
+        run: |
+            NEW_ECR_IMAGE=${{ vars.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:${{ github.run_number }} 
+            TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ env.ENVIRONMENT }}-${{ env.SERVICE }} --output json --region=${{ env.AWS_REGION }})
+            echo $TASK_DEFINITION | jq '.taskDefinition.containerDefinitions[0].image='\"${NEW_ECR_IMAGE}\" > task-definition.json
+            sed -ie '2d' task-definition.json
+            head -n -3 task-definition.json > temp && mv temp task-definition.json
+            echo '}' >> task-definition.json
+            echo $(cat task-definition.json | jq 'del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)') > task-definition.json
+            aws ecs register-task-definition --region=${{ env.AWS_REGION }} --cli-input-json file://task-definition.json
+            TASK_REVISION=$(aws ecs describe-task-definition --task-definition  ${{ env.ENVIRONMENT }}-${{ env.SERVICE }} --region=${{ env.AWS_REGION }} | egrep "revision" | tr "/" " " | awk '{print $2}' | sed 's/"$//' | sed -e $'s/,/\\\n/g')
+            aws ecs update-service --cluster ${{ env.ENVIRONMENT }} --service ${{ env.ENVIRONMENT }}-${{ env.SERVICE }} --task-definition ${{ env.ENVIRONMENT }}-${{ env.SERVICE }}:$TASK_REVISION --region=${{ env.AWS_REGION }}
