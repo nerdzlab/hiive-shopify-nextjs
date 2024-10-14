@@ -17,6 +17,8 @@ axiosInstance.interceptors.response.use(
       if (!window.location.href.includes("/login")) {
         window.location.href = "/login";
       }
+    } else {
+      return Promise.reject(error);
     }
   },
 );

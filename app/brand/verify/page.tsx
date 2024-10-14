@@ -113,6 +113,7 @@ function BrandVerify({ data }: { data: Brand }) {
   };
 
   const onSubmit = async () => {
+    setErrors({});
     toggleLoading.on();
 
     try {
@@ -141,7 +142,13 @@ function BrandVerify({ data }: { data: Brand }) {
             router.push("/brand/status");
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          const isPhoneError =
+            error.response?.data.message?.[0]?.includes("phoneNumber");
+          if (isPhoneError) {
+            setErrors({ phoneNumber: error.response?.data.message?.[0] });
+          }
+        });
     } catch (error: any) {
       if (error instanceof yup.ValidationError) {
         const errors = error.inner.reduce<{ [key: string]: string }>(
