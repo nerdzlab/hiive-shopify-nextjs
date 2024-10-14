@@ -105,8 +105,10 @@ export const PublishProductModal = ({
 
   const handleRangeSliderChange = useCallback(
     (value: number) => {
-      if (modalData.retailPrice) {
-        setPrice(String(((+modalData.retailPrice / 100) * +value).toFixed(2)));
+      if ((modalData.retailPrice, modalData.retailPrice)) {
+        const discount = (+modalData.retailPrice / 100) * +value;
+
+        setPrice((+modalData.retailPrice - discount).toFixed(2));
       }
       if (errors?.price) {
         setErrors({});
@@ -127,7 +129,7 @@ export const PublishProductModal = ({
     await postPublishProduct({
       productId: String(modalData.id),
       price: +price,
-      allowedHiivePoints: Number(+retailPrice - +price),
+      allowedHiivePoints: Math.round(Number(+retailPrice - +price)),
       publishStartAt: new Date(dateValue).toISOString(),
       allowedInventory: Number(allowedInventory),
       retailPrice: Number(retailPrice),
@@ -142,10 +144,11 @@ export const PublishProductModal = ({
 
   useEffect(() => {
     if (modalData.retailPrice) {
+      const discount = (+modalData.retailPrice / 100) * +rangeValue;
+
+      setPrice((+modalData.retailPrice - discount).toFixed(2));
       setRetailPrice(modalData.retailPrice);
-      setPrice(
-        String(((+modalData.retailPrice / 100) * +rangeValue).toFixed(2)),
-      );
+      setPrice((+modalData.retailPrice - discount).toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalData]);
