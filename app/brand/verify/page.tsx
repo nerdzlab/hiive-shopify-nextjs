@@ -72,7 +72,7 @@ const validationSchema = yup.object().shape({
     .required("VALIDATION_FIELD_REQUIRED")
     .test(
       "is-valid-size",
-      "Max allowed size is 10KB",
+      "Max allowed size is 10MB",
       (value: any) => value && value.size <= MAX_FILE_SIZE,
     ),
 });
@@ -275,7 +275,7 @@ function BrandVerify({ data }: { data: Brand }) {
                 {errors?.logo && (
                   <Bleed marginBlock="400">
                     <Text variant="bodySm" as="p" tone="critical">
-                      Max allowed size is 10KB
+                      Max allowed size is 10MB
                     </Text>
                   </Bleed>
                 )}
