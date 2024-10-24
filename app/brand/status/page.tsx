@@ -52,7 +52,7 @@ const BrandReviewStatus = ({
         </Button>
         <FooterHelp>
           If you have any questions, feel free to{" "}
-          <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
+          <Link url="https://www.joinhiive.com/brands#form" target="_blank">
             Contact Hiive
           </Link>
         </FooterHelp>
@@ -72,7 +72,7 @@ const BrandReviewStatus = ({
       </Text>
       <FooterHelp align="center">
         If you have any questions in the meantime, please feel free to{" "}
-        <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
+        <Link url="https://www.joinhiive.com/brands#form" target="_blank">
           <p className="text-center">Contact Hiive</p>
         </Link>
       </FooterHelp>
