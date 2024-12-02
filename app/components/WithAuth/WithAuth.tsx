@@ -4,6 +4,7 @@ import { Spinner } from "@shopify/polaris";
 
 import { useAuth } from "@/context/AuthContext";
 import {
+  ACCOUNT,
   AUTH_ROUTES,
   BRAND_STATUS,
   BRAND_VERIFY,
@@ -31,7 +32,7 @@ const withAuth = <T extends {}>(WrappedComponent: React.ComponentType<T>) => {
       } else if (!loading && (isBrandPending || isBrandDeclined)) {
         router.replace(BRAND_STATUS);
       } else if (!loading && isAuthRoute && allowUser) {
-        router.replace(OVERVIEW);
+        router.replace(ACCOUNT);
       } else if (!loading && !isAuthRoute && (!token || !allowUser)) {
         router.replace(LOGIN);
       }
