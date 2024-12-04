@@ -1,16 +1,20 @@
+import { BrandApprovalStatus } from "@/types/Brand";
 import { Link, AccountConnection } from "@shopify/polaris";
 import { useState, useCallback } from "react";
 
-function ConnectAccount() {
-  const [connected, setConnected] = useState(false);
-  const accountName = connected ? "Jane Appleseed" : "";
-
-  const handleAction = useCallback(() => {
-    setConnected((connected) => !connected);
-  }, []);
+function ConnectAccount({
+  approveStatus,
+  brandLogoUrl,
+  brandEmail,
+}: {
+  brandEmail?: string;
+  brandLogoUrl?: string;
+  approveStatus: BrandApprovalStatus;
+}) {
+  const [connected, setConnected] = useState(approveStatus !== "declined");
 
   const buttonText = connected ? "Disconnect" : "Connect";
-  const details = connected ? "Account connected" : "No account connected";
+  const details = connected ? brandEmail : "No account connected";
   const terms = connected ? null : (
     <p>
       By clicking <strong>Connect</strong>, you agree to accept Hiive`s{" "}
@@ -21,11 +25,17 @@ function ConnectAccount() {
     </p>
   );
 
+  const handleAction = () => {
+    if (!connected) {
+      open("/brand/verify", "_self");
+    }
+  };
+
   return (
     <AccountConnection
-      accountName={accountName}
+      avatarUrl={brandLogoUrl}
       connected={connected}
-      title="Connection needed"
+      title={connected ? undefined : "Connection needed"}
       action={{
         content: buttonText,
         onAction: handleAction,

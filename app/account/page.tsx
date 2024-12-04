@@ -4,12 +4,14 @@ import { Page, Tabs } from "@shopify/polaris";
 import { useRecoilValue } from "recoil";
 import useSWR from "swr";
 
+import { ACCOUNT, SETTINGS } from "@/utils/routes";
 import { userToken } from "@/atoms/token";
 import { Brand } from "@/types/Brand";
 
 import { swrFetcher } from "../api/swrFetcher";
 import AccountSection from "./AccountSection";
 import SettingsSection from "./SettingsSection";
+import Footer from "../components/Footer";
 
 const tabs = [
   {
@@ -32,7 +34,7 @@ export default function AccountPage({ defaultPage }: { defaultPage?: string }) {
   });
 
   const handleTabChange = useCallback((selectedTabIndex: number) => {
-    open(!!selectedTabIndex ? "/settings" : "/account", "_self");
+    open(!!selectedTabIndex ? SETTINGS : ACCOUNT, "_self");
   }, []);
 
   if (isLoading || !data) {
@@ -47,10 +49,16 @@ export default function AccountPage({ defaultPage }: { defaultPage?: string }) {
         onSelect={handleTabChange}
       >
         {selectedTab === "account" && (
-          <AccountSection approveStatus={data.approvalStatus} />
+          <AccountSection
+            declineReason={data.declineReason}
+            brandEmail={data.email}
+            brandLogoUrl={data.brandLogoUrl}
+            approveStatus={data.approvalStatus}
+          />
         )}
         {selectedTab === "settings" && <SettingsSection />}
       </Tabs>
+      <Footer />
     </Page>
   );
 }

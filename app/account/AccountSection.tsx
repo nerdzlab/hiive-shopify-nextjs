@@ -10,33 +10,60 @@ import {
   Layout,
   Text,
 } from "@shopify/polaris";
-import { Brand } from "@/types/Brand";
+import { BrandApprovalStatus } from "@/types/Brand";
 
 import ConnectAccount from "./ConnectAccount";
 import { ProductError } from "./components/ProductStatus";
 
-const STORE_REVIEW_BANNER = {
-  pending: (
-    <Banner title="Marketplace is reviewing your store" tone="warning" hideIcon>
-      <p>It usually takes about 24 hours to hear back.</p>
+const StoreReviewBanner = ({
+  declineReason,
+  approveStatus,
+}: {
+  declineReason?: string | null;
+  approveStatus: BrandApprovalStatus;
+}) => {
+  const onResubmitClick = () => open("/brand/verify", "_self");
+
+  if (approveStatus === "pending") {
+    return (
+      <Banner
+        title="Marketplace is reviewing your store"
+        tone="warning"
+        hideIcon
+      >
+        <p>It usually takes about 24 hours to hear back.</p>
+      </Banner>
+    );
+  }
+
+  if (approveStatus === "approved") {
+    return (
+      <Banner title="Account is connected" tone="success" hideIcon>
+        <p>You can sync with Marketplace now</p>
+      </Banner>
+    );
+  }
+
+  return (
+    <Banner title="Application rejected" tone="critical">
+      <BlockStack gap="200" inlineAlign="start">
+        <p>{declineReason}</p>
+        <Button onClick={onResubmitClick}>Resubmit the Form</Button>
+      </BlockStack>
     </Banner>
-  ),
-  approved: (
-    <Banner title="Account is connected" tone="success" hideIcon>
-      <p>You can sync with Marketplace now</p>
-    </Banner>
-  ),
-  declined: (
-    <Banner title="Account is connected" tone="success" hideIcon>
-      <p>You can sync with Marketplace now</p>
-    </Banner>
-  ),
+  );
 };
 
 const AccountSection = ({
   approveStatus,
+  brandLogoUrl,
+  brandEmail,
+  declineReason,
 }: {
-  approveStatus: Brand["approvalStatus"];
+  declineReason?: string | null;
+  brandEmail?: string;
+  brandLogoUrl?: string;
+  approveStatus: BrandApprovalStatus;
 }) => {
   return (
     <Box padding="400">
@@ -51,7 +78,10 @@ const AccountSection = ({
           </Text>
         </Box>
 
-        {STORE_REVIEW_BANNER[approveStatus]}
+        <StoreReviewBanner
+          approveStatus={approveStatus}
+          declineReason={declineReason}
+        />
 
         <Layout>
           <Layout.AnnotatedSection
@@ -59,7 +89,11 @@ const AccountSection = ({
             title="Marketplace account"
             description="Connect your Marketplace Account so you can manage and sync with Marketplace"
           >
-            <ConnectAccount />
+            <ConnectAccount
+              brandEmail={brandEmail}
+              approveStatus={approveStatus}
+              brandLogoUrl={brandLogoUrl}
+            />
           </Layout.AnnotatedSection>
         </Layout>
 

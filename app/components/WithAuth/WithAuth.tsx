@@ -6,7 +6,6 @@ import { useAuth } from "@/context/AuthContext";
 import {
   ACCOUNT,
   AUTH_ROUTES,
-  BRAND_STATUS,
   BRAND_VERIFY,
   LOGIN,
   OVERVIEW,
@@ -30,7 +29,7 @@ const withAuth = <T extends {}>(WrappedComponent: React.ComponentType<T>) => {
       if (!loading && token && isNoBrand) {
         router.replace(BRAND_VERIFY);
       } else if (!loading && (isBrandPending || isBrandDeclined)) {
-        router.replace(BRAND_STATUS);
+        router.replace(ACCOUNT);
       } else if (!loading && isAuthRoute && allowUser) {
         router.replace(ACCOUNT);
       } else if (!loading && !isAuthRoute && (!token || !allowUser)) {
