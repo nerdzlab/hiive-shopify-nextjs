@@ -26,9 +26,9 @@ const tabs = [
   },
 ];
 
-export default function AccountPage({ defaultPage }: { defaultPage?: string }) {
+export default function AccountPage() {
   const token = useRecoilValue(userToken);
-  const [selectedTab, setSelectedTab] = useState(defaultPage || "account");
+  const [selectedTab, setSelectedTab] = useState("account");
   const { data, isLoading } = useSWR<Brand>(["/brand/me", token], swrFetcher, {
     shouldRetryOnError: false,
   });
