@@ -1,5 +1,7 @@
 "use client";
-import { ProductsCount } from "@/types/sdf";
+import { swrFetcher } from "@/app/api/swrFetcher";
+import { userToken } from "@/atoms/token";
+import { ProductsCount } from "@/types/ProductsCount";
 import {
   Badge,
   Banner,
@@ -8,6 +10,8 @@ import {
   InlineStack,
   Text,
 } from "@shopify/polaris";
+import { useRecoilValue } from "recoil";
+import useSWR from "swr";
 
 export const ProductSuccess = ({ data }: { data: ProductsCount }) => {
   return (
@@ -92,5 +96,26 @@ export const ProductError = ({ data }: { data: ProductsCount }) => {
         </Button>
       </InlineStack>
     </>
+  );
+};
+
+export const ProductsContainer = () => {
+  const token = useRecoilValue(userToken);
+  const { data, isLoading } = useSWR<ProductsCount>(
+    ["/products/count", token],
+    swrFetcher,
+    {
+      shouldRetryOnError: false,
+    },
+  );
+
+  if (isLoading || !data) {
+    return null;
+  }
+
+  return data?.unpublishedProductsCount ? (
+    <ProductError data={data} />
+  ) : (
+    <ProductSuccess data={data} />
   );
 };

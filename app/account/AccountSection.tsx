@@ -1,5 +1,4 @@
 "use client";
-import useSWR from "swr";
 import {
   Banner,
   BlockStack,
@@ -11,13 +10,15 @@ import {
   Layout,
   Text,
 } from "@shopify/polaris";
-import { useRecoilValue } from "recoil";
-import { userToken } from "@/atoms/token";
-import { ProductsCount } from "@/types/sdf";
+
 import { BrandApprovalStatus } from "@/types/Brand";
 
 import ConnectAccount from "./ConnectAccount";
-import { ProductError, ProductSuccess } from "./components/ProductStatus";
+import {
+  ProductError,
+  ProductsContainer,
+  ProductSuccess,
+} from "./components/ProductStatus";
 import { swrFetcher } from "../api/swrFetcher";
 
 const StoreReviewBanner = ({
@@ -70,19 +71,6 @@ const AccountSection = ({
   brandLogoUrl?: string;
   approveStatus: BrandApprovalStatus;
 }) => {
-  const token = useRecoilValue(userToken);
-  const { data, isLoading } = useSWR<ProductsCount>(
-    ["/products/count", token],
-    swrFetcher,
-    {
-      shouldRetryOnError: false,
-    },
-  );
-
-  if (isLoading || !data) {
-    return null;
-  }
-
   return (
     <Box padding="400">
       <BlockStack gap="500">
@@ -136,11 +124,8 @@ const AccountSection = ({
                   </Button>
                 </InlineGrid>
 
-                {data?.unpublishedProductsCount ? (
-                  <ProductError data={data} />
-                ) : (
-                  <ProductSuccess data={data} />
-                )}
+                <ProductsContainer />
+
                 <Divider />
                 <Text as="p">
                   Marketplace takes up to 3 business days to review published
