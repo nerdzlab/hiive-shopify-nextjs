@@ -21,19 +21,20 @@ import {
   DeleteIcon,
   PageUpIcon,
 } from "@shopify/polaris-icons";
-
+import { useRecoilValue } from "recoil";
 import * as yup from "yup";
+import useSWR from "swr";
+
 import { useBoolean } from "@/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
-import { useRecoilValue } from "recoil";
 import { userToken } from "@/atoms/token";
 import { Brand, BrandFormValues } from "@/types/Brand";
-import { postProductApprove } from "@/app/api/services/Product.service";
-import { ConfirmBrandChangeModal } from "./ConfirmBrandChangeModal";
-import useSWR from "swr";
 import { swrFetcher } from "@/app/api/swrFetcher";
 import { useAuth } from "@/context/AuthContext";
+import { ACCOUNT } from "@/utils/routes";
+
+import { ConfirmBrandChangeModal } from "./ConfirmBrandChangeModal";
 
 const styles = {
   deleteIconHover: {
@@ -139,7 +140,7 @@ function BrandVerify({ data }: { data: Brand }) {
         })
         .then(() => {
           if (!isEdit) {
-            router.push("/brand/status");
+            open(ACCOUNT, "_self");
           }
         })
         .catch((error) => {

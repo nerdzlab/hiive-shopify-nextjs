@@ -1,13 +1,14 @@
 "use client";
-
 import { AppProvider } from "@shopify/polaris";
-import "@shopify/polaris/build/esm/styles.css";
-import translations from "@shopify/polaris/locales/en.json";
-import ApolloProvider from "./ApolloProvider";
 import { RecoilRoot } from "recoil";
 import Link from "next/link";
+
+import "@shopify/polaris/build/esm/styles.css";
+import translations from "@shopify/polaris/locales/en.json";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { PRODUCTS, OVERVIEW, SETTINGS } from "@/utils/routes";
+import { PRODUCTS, OVERVIEW, SETTINGS, ACCOUNT } from "@/utils/routes";
+
+import ApolloProvider from "./ApolloProvider";
 
 const SideBar = () => {
   const auth = useAuth();
@@ -15,9 +16,12 @@ const SideBar = () => {
 
   return allowUser ? (
     <ui-nav-menu>
-      <Link href={OVERVIEW}>Overview</Link>
+      <Link href={OVERVIEW} rel="home">
+        Overview
+      </Link>
       <Link href={PRODUCTS}>Manage Products</Link>
       <Link href={SETTINGS}>Settings</Link>
+      <Link href={ACCOUNT}>Account</Link>
     </ui-nav-menu>
   ) : null;
 };
