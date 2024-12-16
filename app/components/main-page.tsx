@@ -111,7 +111,7 @@ export default function Home({ shop }: { shop: string }) {
             <EmptyState
               heading="Hiive"
               secondaryAction={{
-                content: "Learn morer",
+                content: "Learn more",
               }}
               image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
             >

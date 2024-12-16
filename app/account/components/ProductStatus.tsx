@@ -1,4 +1,5 @@
 "use client";
+import { ProductsCount } from "@/types/sdf";
 import {
   Badge,
   Banner,
@@ -8,7 +9,7 @@ import {
   Text,
 } from "@shopify/polaris";
 
-export const ProductSuccess = () => {
+export const ProductSuccess = ({ data }: { data: ProductsCount }) => {
   return (
     <Text as="p">
       <BlockStack gap="500">
@@ -21,7 +22,7 @@ export const ProductSuccess = () => {
         </Banner>
         <p>
           <Text as="span" fontWeight="semibold">
-            199
+            {data.publishedProductsCount}
           </Text>{" "}
           products are{" "}
           <Text as="span" fontWeight="semibold">
@@ -34,7 +35,7 @@ export const ProductSuccess = () => {
   );
 };
 
-export const ProductError = () => {
+export const ProductError = ({ data }: { data: ProductsCount }) => {
   return (
     <>
       <Text as="p">
@@ -48,7 +49,7 @@ export const ProductError = () => {
           </Banner>
           <p>
             <Text as="span" fontWeight="semibold">
-              199
+              {data.allProductsCount}
             </Text>{" "}
             products are{" "}
             <Text as="span" fontWeight="semibold">
@@ -71,7 +72,7 @@ export const ProductError = () => {
           onClick={() => {}}
           accessibilityLabel="manageAvailability"
         >
-          189 products
+          {String(data.publishedProductsCount)} products
         </Button>
       </InlineStack>
       <InlineStack gap="200">
@@ -87,7 +88,7 @@ export const ProductError = () => {
           onClick={() => {}}
           accessibilityLabel="manageAvailability"
         >
-          10 products
+          {String(data.unpublishedProductsCount)} products
         </Button>
       </InlineStack>
     </>

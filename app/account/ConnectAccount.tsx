@@ -1,6 +1,9 @@
+import { userToken } from "@/atoms/token";
+import { useAuth } from "@/context/AuthContext";
 import { BrandApprovalStatus } from "@/types/Brand";
 import { Link, AccountConnection } from "@shopify/polaris";
 import { useState, useCallback } from "react";
+import { useSetRecoilState } from "recoil";
 
 function ConnectAccount({
   approveStatus,
@@ -12,6 +15,9 @@ function ConnectAccount({
   approveStatus: BrandApprovalStatus;
 }) {
   const [connected, setConnected] = useState(approveStatus !== "declined");
+  const setToken = useSetRecoilState(userToken);
+  const auth = useAuth();
+  const { updateBrandStatus } = auth || {};
 
   const buttonText = connected ? "Disconnect" : "Connect";
   const details = connected ? brandEmail : "No account connected";
@@ -28,6 +34,9 @@ function ConnectAccount({
   const handleAction = () => {
     if (!connected) {
       open("/brand/verify", "_self");
+    } else if (updateBrandStatus) {
+      updateBrandStatus(BrandApprovalStatus.Pending);
+      setToken("");
     }
   };
 
