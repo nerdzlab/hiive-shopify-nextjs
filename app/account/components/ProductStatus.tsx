@@ -39,7 +39,13 @@ export const ProductSuccess = ({ data }: { data: ProductsCount }) => {
   );
 };
 
-export const ProductError = ({ data }: { data: ProductsCount }) => {
+export const ProductError = ({
+  data,
+  onManageAvailability,
+}: {
+  data: ProductsCount;
+  onManageAvailability: () => void;
+}) => {
   return (
     <>
       <Text as="p">
@@ -73,7 +79,7 @@ export const ProductError = ({ data }: { data: ProductsCount }) => {
         </Badge>
         <Button
           variant="plain"
-          onClick={() => {}}
+          onClick={onManageAvailability}
           accessibilityLabel="manageAvailability"
         >
           {String(data.publishedProductsCount)} products
@@ -89,7 +95,7 @@ export const ProductError = ({ data }: { data: ProductsCount }) => {
         </Badge>
         <Button
           variant="plain"
-          onClick={() => {}}
+          onClick={onManageAvailability}
           accessibilityLabel="manageAvailability"
         >
           {String(data.unpublishedProductsCount)} products
@@ -99,7 +105,11 @@ export const ProductError = ({ data }: { data: ProductsCount }) => {
   );
 };
 
-export const ProductsContainer = () => {
+export const ProductsContainer = ({
+  onManageAvailability,
+}: {
+  onManageAvailability: () => void;
+}) => {
   const token = useRecoilValue(userToken);
   const { data, isLoading } = useSWR<ProductsCount>(
     ["/products/count", token],
@@ -114,7 +124,7 @@ export const ProductsContainer = () => {
   }
 
   return data?.unpublishedProductsCount ? (
-    <ProductError data={data} />
+    <ProductError onManageAvailability={onManageAvailability} data={data} />
   ) : (
     <ProductSuccess data={data} />
   );
