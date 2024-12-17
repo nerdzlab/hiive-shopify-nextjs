@@ -20,6 +20,7 @@ import {
   ProductSuccess,
 } from "./components/ProductStatus";
 import { swrFetcher } from "../api/swrFetcher";
+import { useCallback, useEffect, useRef } from "react";
 
 const StoreReviewBanner = ({
   declineReason,
@@ -71,6 +72,29 @@ const AccountSection = ({
   brandLogoUrl?: string;
   approveStatus: BrandApprovalStatus;
 }) => {
+  const shopName = useRef(null);
+
+  const onManageAvailability = async () => {
+    if (shopName) {
+      open(
+        `https://admin.shopify.com/store/${shopName.current}/products?selectedView=all`,
+        "_blank",
+      );
+    }
+  };
+
+  const getShop = useCallback(async () => {
+    const response = await fetch("/api/hello");
+    const result = await response.json();
+    const shop = result.data.shop.replace(".myshopify.com", "");
+
+    shopName.current = shop;
+  }, []);
+
+  useEffect(() => {
+    getShop();
+  }, [getShop]);
+
   return (
     <Box padding="400">
       <BlockStack gap="500">
@@ -117,14 +141,16 @@ const AccountSection = ({
                   </Text>
                   <Button
                     variant="plain"
-                    onClick={() => {}}
+                    onClick={onManageAvailability}
                     accessibilityLabel="manageAvailability"
                   >
                     Manage availability
                   </Button>
                 </InlineGrid>
 
-                <ProductsContainer />
+                <ProductsContainer
+                  onManageAvailability={onManageAvailability}
+                />
 
                 <Divider />
                 <Text as="p">

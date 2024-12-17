@@ -5,10 +5,10 @@ export default function Footer() {
   return (
     <FooterHelp align="center">
       <InlineStack wrap={false} gap="400">
-        <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
+        <Link target="_blank" url="https://help.shopify.com/en">
           Documentation
         </Link>
-        <Link url="https://help.shopify.com/manual/orders/fulfill-orders">
+        <Link target="_blank" url="mailto:hello@joinhiive.com">
           Support
         </Link>
       </InlineStack>
