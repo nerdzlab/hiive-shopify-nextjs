@@ -9,9 +9,9 @@ import { userToken } from "@/atoms/token";
 import { Brand } from "@/types/Brand";
 
 import { swrFetcher } from "../api/swrFetcher";
+import AccountSection from "./AccountSection";
+import SettingsSection from "./SettingsSection";
 import Footer from "../components/Footer";
-import SettingsSection from "../account/SettingsSection";
-import AccountSection from "../account/AccountSection";
 
 const tabs = [
   {
@@ -26,9 +26,9 @@ const tabs = [
   },
 ];
 
-function SettingsPage() {
+export default function AccountPage() {
   const token = useRecoilValue(userToken);
-  const [selectedTab, setSelectedTab] = useState("settings");
+  const [selectedTab, setSelectedTab] = useState("account");
   const { data, isLoading } = useSWR<Brand>(["/brand/me", token], swrFetcher, {
     shouldRetryOnError: false,
   });
@@ -62,5 +62,3 @@ function SettingsPage() {
     </Page>
   );
 }
-
-export default SettingsPage;
