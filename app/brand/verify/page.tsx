@@ -21,14 +21,15 @@ import {
   DeleteIcon,
   PageUpIcon,
 } from "@shopify/polaris-icons";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import * as yup from "yup";
 import useSWR from "swr";
 
 import { useBoolean } from "@/hooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
 import { userToken } from "@/atoms/token";
+import { postBrandValidation } from "@/app/api/services/OfflineToken.service";
+import { fetchAndConvertToBinary } from "@/utils/common";
 import { Brand, BrandFormValues } from "@/types/Brand";
 import { swrFetcher } from "@/app/api/swrFetcher";
 import { useAuth } from "@/context/AuthContext";
@@ -78,6 +79,8 @@ const validationSchema = yup.object().shape({
     ),
 });
 
+const controller = new AbortController();
+
 function BrandVerify({ data }: { data: Brand }) {
   const router = useRouter();
 
@@ -113,9 +116,28 @@ function BrandVerify({ data }: { data: Brand }) {
     }
   };
 
+  const checkImage = async (file?: string | File) => {
+    if (isEdit && typeof formValues?.logo === "string") {
+      const mimeType = formValues.logo.split(".")?.pop();
+
+      await fetchAndConvertToBinary(formValues.logo).then((binaryFile) => {
+        if (!binaryFile) return;
+
+        const blob = new Blob([binaryFile], { type: mimeType });
+        const file = new File([blob], "logo.png", { type: mimeType });
+
+        formValues.logo = file;
+      });
+    } else {
+      formValues.logo = file;
+    }
+  };
+
   const onSubmit = async () => {
     setErrors({});
     toggleLoading.on();
+
+    await checkImage(formValues.logo);
 
     try {
       await validationSchema.validate(formValues, { abortEarly: false });
@@ -128,6 +150,7 @@ function BrandVerify({ data }: { data: Brand }) {
         token,
         formValues,
         shopifyAccessToken: result.data.accessToken,
+        signal: controller.signal,
       })
         .then((data: Brand) => {
           const toastTitle = isEdit
@@ -198,10 +221,16 @@ function BrandVerify({ data }: { data: Brand }) {
     setFormValue((state) => ({ ...state, logo: undefined }));
   }, []);
 
+  const onRequestCancel = () => controller.abort();
+
   return (
     <Page narrowWidth={!isEdit}>
       <Layout.Section>
-        <ConfirmBrandChangeModal onConfirm={onSubmit} />
+        <ConfirmBrandChangeModal
+          onConfirm={onSubmit}
+          onRequestCancel={onRequestCancel}
+          disabled={loading}
+        />
         <BlockStack gap="500" align="start">
           <div>
             <Button onClick={router.back} icon={ChevronLeftIcon}>

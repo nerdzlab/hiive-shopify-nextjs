@@ -7,11 +7,13 @@ export const postBrandValidation = async ({
   token,
   formValues,
   shopifyAccessToken,
+  signal,
 }: {
   shop: string;
   token: string;
   formValues: BrandFormValues;
   shopifyAccessToken: string;
+  signal: AbortSignal;
 }) => {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
@@ -26,6 +28,7 @@ export const postBrandValidation = async ({
   formdata.append("shopifyStoreName", shop);
 
   const response = await axiosInstance.post("/brand/validate", formdata, {
+    signal,
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
