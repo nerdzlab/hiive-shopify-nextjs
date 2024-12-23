@@ -11,8 +11,12 @@ import {
 
 export const ConfirmBrandChangeModal = ({
   onConfirm,
+  onRequestCancel,
+  disabled,
 }: {
   onConfirm: () => void;
+  onRequestCancel: () => void;
+  disabled: boolean;
 }) => {
   const onSubmit = async () => {
     await onConfirm();
@@ -41,13 +45,14 @@ export const ConfirmBrandChangeModal = ({
           <InlineStack align="end">
             <ButtonGroup>
               <Button
+                disabled={disabled}
                 onClick={onSubmit}
                 variant="primary"
                 accessibilityLabel="Publish"
               >
                 Save changes
               </Button>
-              <Button onClick={() => {}} accessibilityLabel="Cancel">
+              <Button onClick={onRequestCancel} accessibilityLabel="Cancel">
                 Cancel
               </Button>
             </ButtonGroup>
