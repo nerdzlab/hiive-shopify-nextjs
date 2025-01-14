@@ -63,11 +63,13 @@ const AccountSection = ({
   brandLogoUrl,
   brandEmail,
   declineReason,
+  hasUser,
 }: {
+  hasUser: boolean;
   declineReason?: string | null;
   brandEmail?: string;
   brandLogoUrl?: string;
-  approveStatus: BrandApprovalStatus;
+  approveStatus?: BrandApprovalStatus;
 }) => {
   const shopName = useRef(null);
 
@@ -105,12 +107,16 @@ const AccountSection = ({
           </Text>
         </Box>
 
-        <StoreReviewBanner
-          approveStatus={approveStatus!}
-          declineReason={declineReason}
-        />
+        {hasUser && (
+          <StoreReviewBanner
+            approveStatus={approveStatus!}
+            declineReason={declineReason}
+          />
+        )}
 
-        <ProductsBanner onManageAvailability={onManageAvailability} />
+        {hasUser && (
+          <ProductsBanner onManageAvailability={onManageAvailability} />
+        )}
 
         <Layout>
           <Layout.AnnotatedSection
@@ -119,6 +125,7 @@ const AccountSection = ({
             description="Connect your Marketplace Account so you can manage and sync with Marketplace"
           >
             <ConnectAccount
+              hasUser={hasUser}
               brandEmail={brandEmail}
               approveStatus={approveStatus}
               brandLogoUrl={brandLogoUrl}
@@ -126,38 +133,40 @@ const AccountSection = ({
           </Layout.AnnotatedSection>
         </Layout>
 
-        <Layout>
-          <Layout.AnnotatedSection
-            id="publishingDetails"
-            title="Publishing"
-            description="Products that are being synced to your catalog, or have errors preventing their sync, are shown here."
-          >
-            <Card>
-              <BlockStack gap="300">
-                <InlineGrid columns="1fr auto">
-                  <Text as="h2" variant="headingSm">
-                    Product status
+        {hasUser && (
+          <Layout>
+            <Layout.AnnotatedSection
+              id="publishingDetails"
+              title="Publishing"
+              description="Products that are being synced to your catalog, or have errors preventing their sync, are shown here."
+            >
+              <Card>
+                <BlockStack gap="300">
+                  <InlineGrid columns="1fr auto">
+                    <Text as="h2" variant="headingSm">
+                      Product status
+                    </Text>
+                    <Button
+                      variant="plain"
+                      onClick={onManageAvailability}
+                      accessibilityLabel="manageAvailability"
+                    >
+                      Manage availability
+                    </Button>
+                  </InlineGrid>
+
+                  <ProductsContainer />
+
+                  <Divider />
+                  <Text as="p">
+                    Marketplace takes up to 3 business days to review published
+                    products.
                   </Text>
-                  <Button
-                    variant="plain"
-                    onClick={onManageAvailability}
-                    accessibilityLabel="manageAvailability"
-                  >
-                    Manage availability
-                  </Button>
-                </InlineGrid>
-
-                <ProductsContainer />
-
-                <Divider />
-                <Text as="p">
-                  Marketplace takes up to 3 business days to review published
-                  products.
-                </Text>
-              </BlockStack>
-            </Card>
-          </Layout.AnnotatedSection>
-        </Layout>
+                </BlockStack>
+              </Card>
+            </Layout.AnnotatedSection>
+          </Layout>
+        )}
       </BlockStack>
     </Box>
   );

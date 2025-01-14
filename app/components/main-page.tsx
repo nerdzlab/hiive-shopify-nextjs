@@ -38,15 +38,6 @@ export default function Home({ shop }: { shop: string }) {
     }
   }, [router]);
 
-  const markAppConnected = async () => {
-    try {
-      await fetch("/api/user/update");
-      checkForToken();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
     app.idToken().then((token) => {
       doTokenExchange(shop, token, false).then((data) => {
@@ -60,12 +51,6 @@ export default function Home({ shop }: { shop: string }) {
       });
     });
   }, [app, shop, router, toggle, checkForToken]);
-
-  const [checked, setChecked] = useState(false);
-  const handleChange = useCallback(
-    (newChecked: boolean) => setChecked(newChecked),
-    [],
-  );
 
   return (
     <div className="flex items-center justify-center h-full">

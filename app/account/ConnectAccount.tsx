@@ -9,12 +9,16 @@ function ConnectAccount({
   approveStatus,
   brandLogoUrl,
   brandEmail,
+  hasUser,
 }: {
+  hasUser: boolean;
   brandEmail?: string;
   brandLogoUrl?: string;
   approveStatus?: BrandApprovalStatus;
 }) {
-  const [connected, setConnected] = useState(approveStatus !== "declined");
+  const [connected, setConnected] = useState(
+    hasUser && approveStatus !== "declined",
+  );
   const setToken = useSetRecoilState(userToken);
   const auth = useAuth();
   const { updateBrandStatus } = auth || {};
@@ -43,7 +47,7 @@ function ConnectAccount({
 
   const handleAction = () => {
     if (!connected) {
-      open("/brand/verify", "_self");
+      open("/login", "_self");
     } else if (updateBrandStatus) {
       updateBrandStatus(BrandApprovalStatus.Pending);
       setToken("");

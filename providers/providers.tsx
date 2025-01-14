@@ -23,7 +23,12 @@ const SideBar = () => {
       <Link href={SETTINGS}>Settings</Link>
       <Link href={ACCOUNT}>Account</Link>
     </ui-nav-menu>
-  ) : null;
+  ) : (
+    <ui-nav-menu>
+      <Link href={SETTINGS}>Settings</Link>
+      <Link href={ACCOUNT}>Account</Link>
+    </ui-nav-menu>
+  );
 };
 
 export default function Providers({ children }: { children: React.ReactNode }) {

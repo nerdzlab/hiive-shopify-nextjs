@@ -37,7 +37,7 @@ export default function AccountPage() {
     open(!!selectedTabIndex ? SETTINGS : ACCOUNT, "_self");
   }, []);
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return null;
   }
 
@@ -50,10 +50,11 @@ export default function AccountPage() {
       >
         {selectedTab === "account" && (
           <AccountSection
-            declineReason={data.declineReason}
-            brandEmail={data.email}
-            brandLogoUrl={data.brandLogoUrl}
-            approveStatus={data.approvalStatus}
+            hasUser={!!data}
+            declineReason={data?.declineReason}
+            brandEmail={data?.email}
+            brandLogoUrl={data?.brandLogoUrl}
+            approveStatus={data?.approvalStatus}
           />
         )}
         {selectedTab === "settings" && <SettingsSection />}

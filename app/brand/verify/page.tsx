@@ -81,7 +81,7 @@ const validationSchema = yup.object().shape({
 
 const controller = new AbortController();
 
-function BrandVerify({ data }: { data: Brand }) {
+function BrandVerify({ data }: { data?: Brand }) {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -396,15 +396,17 @@ function BrandVerify({ data }: { data: Brand }) {
 
 const BrandVerifyPage = () => {
   const token = useRecoilValue(userToken);
+
   const { data, error, isLoading } = useSWR<Brand>(
     ["/brand/me", token],
     swrFetcher,
     {
       shouldRetryOnError: false,
+      revalidateOnFocus: false,
     },
   );
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return null;
   }
 

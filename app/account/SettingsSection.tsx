@@ -5,7 +5,7 @@ import { BlockStack, Box, Card, Grid } from "@shopify/polaris";
 
 import { CardWithAction } from "../components/CardWithAction";
 
-const SettingsSection = () => {
+const SettingsSection = ({ hasUser }: { hasUser: boolean }) => {
   const router = useRouter();
 
   const onPrivacyClick = () => {
@@ -29,16 +29,18 @@ const SettingsSection = () => {
     <Box padding="400">
       <BlockStack gap="500">
         <Grid columns={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 2 }}>
-          <Grid.Cell columnSpan={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}>
-            <Card>
-              <CardWithAction
-                title="Brand Onboarding Form"
-                description="Edit and manage your brand details for Hiive"
-                buttonTitle="Manage brand form"
-                buttonAction={onBrandClick}
-              />
-            </Card>
-          </Grid.Cell>
+          {hasUser && (
+            <Grid.Cell columnSpan={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}>
+              <Card>
+                <CardWithAction
+                  title="Brand Onboarding Form"
+                  description="Edit and manage your brand details for Hiive"
+                  buttonTitle="Manage brand form"
+                  buttonAction={onBrandClick}
+                />
+              </Card>
+            </Grid.Cell>
+          )}
           <Grid.Cell columnSpan={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}>
             <Card>
               <CardWithAction
