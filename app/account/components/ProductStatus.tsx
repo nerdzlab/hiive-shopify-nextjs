@@ -1,6 +1,7 @@
 "use client";
 import { swrFetcher } from "@/app/api/swrFetcher";
 import { userToken } from "@/atoms/token";
+import { useBoolean } from "@/hooks";
 import { ProductsCount } from "@/types/ProductsCount";
 import {
   Badge,
@@ -14,16 +15,20 @@ import { useRecoilValue } from "recoil";
 import useSWR from "swr";
 
 export const ProductSuccess = ({ data }: { data: ProductsCount }) => {
+  const [value, toggle] = useBoolean(true);
+
   return (
     <Text as="p">
       <BlockStack gap="500">
-        <Banner onDismiss={() => {}}>
-          <p>
-            Products publishing to Marketplace can take 30 minutes to
-            update.Once your products are successfully published, your products
-            will be visible on Marketplace.
-          </p>
-        </Banner>
+        {value && (
+          <Banner onDismiss={toggle.off}>
+            <p>
+              Products publishing to Marketplace can take 30 minutes to
+              update.Once your products are successfully published, your
+              products will be visible on Marketplace.
+            </p>
+          </Banner>
+        )}
         <p>
           <Text as="span" fontWeight="semibold">
             {data.publishedProductsCount}
@@ -46,17 +51,21 @@ export const ProductError = ({
   data: ProductsCount;
   onManageAvailability: () => void;
 }) => {
+  const [value, toggle] = useBoolean(true);
+
   return (
     <>
       <Text as="p">
         <BlockStack gap="500">
-          <Banner onDismiss={() => {}}>
-            <p>
-              Products publishing to Marketplace can take 30 minutes to
-              update.Once your products are successfully published, your
-              products will be visible on Marketplace.
-            </p>
-          </Banner>
+          {value && (
+            <Banner onDismiss={toggle.off}>
+              <p>
+                Products publishing to Marketplace can take 30 minutes to
+                update.Once your products are successfully published, your
+                products will be visible on Marketplace.
+              </p>
+            </Banner>
+          )}
           <p>
             <Text as="span" fontWeight="semibold">
               {data.allProductsCount}
