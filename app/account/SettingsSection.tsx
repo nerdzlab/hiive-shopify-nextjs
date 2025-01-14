@@ -17,6 +17,14 @@ const SettingsSection = () => {
   };
   const onBrandClick = () => router.push("/brand/verify?edit=true");
 
+  const onTermsClick = () => {
+    window.open(
+      "https://www.joinhiive.com/terms-conditions",
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
   return (
     <Box padding="400">
       <BlockStack gap="500">
@@ -38,6 +46,16 @@ const SettingsSection = () => {
                 description="Review how we protect your data and privacy"
                 buttonTitle="Go to Privacy Policy"
                 buttonAction={onPrivacyClick}
+              />
+            </Card>
+          </Grid.Cell>
+          <Grid.Cell columnSpan={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }}>
+            <Card>
+              <CardWithAction
+                title="Terms and Conditions"
+                description="Take a moment to review our Terms and Conditions to understand our benefits. We want to ensure you have the best possible experience!"
+                buttonTitle="Open Terms and Conditions"
+                buttonAction={onTermsClick}
               />
             </Card>
           </Grid.Cell>

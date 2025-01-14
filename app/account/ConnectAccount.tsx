@@ -12,7 +12,7 @@ function ConnectAccount({
 }: {
   brandEmail?: string;
   brandLogoUrl?: string;
-  approveStatus: BrandApprovalStatus;
+  approveStatus?: BrandApprovalStatus;
 }) {
   const [connected, setConnected] = useState(approveStatus !== "declined");
   const setToken = useSetRecoilState(userToken);
@@ -20,7 +20,17 @@ function ConnectAccount({
   const { updateBrandStatus } = auth || {};
 
   const buttonText = connected ? "Disconnect" : "Connect";
-  const details = connected ? brandEmail : "No account connected";
+
+  const details = connected ? (
+    <div className="">
+      <Link url="https://links.joinhiive.com/ZNptzprB1ub" external>
+        https://links.joinhiive.com/ZNptzprB1ub
+      </Link>
+      <p>{brandEmail}</p>
+    </div>
+  ) : (
+    "No account connected"
+  );
   const terms = connected ? null : (
     <p>
       By clicking <strong>Connect</strong>, you agree to accept Hiive`s{" "}

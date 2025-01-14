@@ -10,17 +10,14 @@ import {
   Layout,
   Text,
 } from "@shopify/polaris";
+import { useCallback, useEffect, useRef } from "react";
 
 import { BrandApprovalStatus } from "@/types/Brand";
 
 import ConnectAccount from "./ConnectAccount";
-import {
-  ProductError,
-  ProductsContainer,
-  ProductSuccess,
-} from "./components/ProductStatus";
+import { ProductsContainer } from "./components/ProductStatus";
 import { swrFetcher } from "../api/swrFetcher";
-import { useCallback, useEffect, useRef } from "react";
+import { ProductsBanner } from "./components/ProductsBanners";
 
 const StoreReviewBanner = ({
   declineReason,
@@ -109,9 +106,11 @@ const AccountSection = ({
         </Box>
 
         <StoreReviewBanner
-          approveStatus={approveStatus}
+          approveStatus={approveStatus!}
           declineReason={declineReason}
         />
+
+        <ProductsBanner onManageAvailability={onManageAvailability} />
 
         <Layout>
           <Layout.AnnotatedSection
@@ -148,9 +147,7 @@ const AccountSection = ({
                   </Button>
                 </InlineGrid>
 
-                <ProductsContainer
-                  onManageAvailability={onManageAvailability}
-                />
+                <ProductsContainer />
 
                 <Divider />
                 <Text as="p">
