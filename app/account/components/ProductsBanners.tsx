@@ -1,4 +1,5 @@
 import { swrFetcher } from "@/app/api/swrFetcher";
+import { Redirect } from "@/app/components/Redirect";
 import { userToken } from "@/atoms/token";
 import { ProductsCount } from "@/types/ProductsCount";
 import { Banner, BlockStack, Button } from "@shopify/polaris";
@@ -11,13 +12,17 @@ export const ProductsBanner = ({
   onManageAvailability: () => void;
 }) => {
   const token = useRecoilValue(userToken);
-  const { data, isLoading } = useSWR<ProductsCount>(
+  const { data, isLoading, error } = useSWR<ProductsCount>(
     ["/products/count", token],
     swrFetcher,
     {
       shouldRetryOnError: false,
     },
   );
+
+  if (error) {
+    return <Redirect to="/brand/verify?edit=true" />;
+  }
 
   if (isLoading || !data) {
     return null;

@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useRef, useState } from "react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 
 import {
@@ -83,7 +83,6 @@ const controller = new AbortController();
 
 function BrandVerify({ data }: { data?: Brand }) {
   const router = useRouter();
-
   const searchParams = useSearchParams();
   const isEdit = searchParams.get("edit") === "true";
   const token = useRecoilValue(userToken);
@@ -116,28 +115,9 @@ function BrandVerify({ data }: { data?: Brand }) {
     }
   };
 
-  const checkImage = async (file?: string | File) => {
-    if (isEdit && typeof formValues?.logo === "string") {
-      const mimeType = formValues.logo.split(".")?.pop();
-
-      await fetchAndConvertToBinary(formValues.logo).then((binaryFile) => {
-        if (!binaryFile) return;
-
-        const blob = new Blob([binaryFile], { type: mimeType });
-        const file = new File([blob], "logo.png", { type: mimeType });
-
-        formValues.logo = file;
-      });
-    } else {
-      formValues.logo = file;
-    }
-  };
-
   const onSubmit = async () => {
     setErrors({});
     toggleLoading.on();
-
-    await checkImage(formValues.logo);
 
     try {
       await validationSchema.validate(formValues, { abortEarly: false });
@@ -221,7 +201,18 @@ function BrandVerify({ data }: { data?: Brand }) {
     setFormValue((state) => ({ ...state, logo: undefined }));
   }, []);
 
-  const onRequestCancel = () => controller.abort();
+  const onRequestCancel = () => {
+    controller.abort();
+    toggleLoading.off();
+
+    if (isEdit) {
+      (
+        document.getElementById("confirm-brand-change-modal") as HTMLElement & {
+          hide: () => void;
+        }
+      )?.hide();
+    }
+  };
 
   return (
     <Page narrowWidth={!isEdit}>

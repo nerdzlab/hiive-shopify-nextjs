@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         loading,
         brandStatus,
         token,
-        allowUser: brandStatus === BrandApprovalStatus.Approved,
+        allowUser: brandStatus === BrandApprovalStatus.Approved && !!token,
         isBrandDeclined: brandStatus === BrandApprovalStatus.Declined,
         isBrandPending: brandStatus === BrandApprovalStatus.Pending,
         isNoBrand: !brandStatus,

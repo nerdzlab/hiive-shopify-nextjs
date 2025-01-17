@@ -31,6 +31,7 @@ export default function AccountPage() {
   const [selectedTab, setSelectedTab] = useState("account");
   const { data, isLoading } = useSWR<Brand>(["/brand/me", token], swrFetcher, {
     shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
 
   const handleTabChange = useCallback((selectedTabIndex: number) => {
@@ -57,7 +58,7 @@ export default function AccountPage() {
             approveStatus={data?.approvalStatus}
           />
         )}
-        {selectedTab === "settings" && <SettingsSection />}
+        {selectedTab === "settings" && <SettingsSection hasUser={!!data} />}
       </Tabs>
       <Footer />
     </Page>
