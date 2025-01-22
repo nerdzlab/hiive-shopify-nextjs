@@ -33,7 +33,7 @@ const withAuth = <T extends {}>(WrappedComponent: React.ComponentType<T>) => {
       } else if (!loading && isAuthRoute && allowUser) {
         router.replace(ACCOUNT);
       } else if (!loading && !isAuthRoute && (!token || !allowUser)) {
-        router.replace(LOGIN);
+        // router.replace(LOGIN);
       }
     }, [loading, token]);
 

@@ -31,13 +31,14 @@ export default function AccountPage() {
   const [selectedTab, setSelectedTab] = useState("account");
   const { data, isLoading } = useSWR<Brand>(["/brand/me", token], swrFetcher, {
     shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
 
   const handleTabChange = useCallback((selectedTabIndex: number) => {
     open(!!selectedTabIndex ? SETTINGS : ACCOUNT, "_self");
   }, []);
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return null;
   }
 
@@ -50,13 +51,14 @@ export default function AccountPage() {
       >
         {selectedTab === "account" && (
           <AccountSection
-            declineReason={data.declineReason}
-            brandEmail={data.email}
-            brandLogoUrl={data.brandLogoUrl}
-            approveStatus={data.approvalStatus}
+            hasUser={!!data}
+            declineReason={data?.declineReason}
+            brandEmail={data?.email}
+            brandLogoUrl={data?.brandLogoUrl}
+            approveStatus={data?.approvalStatus}
           />
         )}
-        {selectedTab === "settings" && <SettingsSection />}
+        {selectedTab === "settings" && <SettingsSection hasUser={!!data} />}
       </Tabs>
       <Footer />
     </Page>

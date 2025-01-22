@@ -21,6 +21,7 @@ import { Product, PublishStatus } from "@/types/Product";
 import { defaultProductsFilters, ITEMS_PER_PAGE } from "./utils";
 import { useState } from "react";
 import withAuth from "../components/WithAuth/WithAuth";
+import { Redirect } from "../components/Redirect";
 
 type ApiPagination = {
   endCursor: string;
@@ -86,11 +87,7 @@ function Products() {
   };
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Spinner accessibilityLabel="Spinner example" size="large" />
-      </div>
-    );
+    return <Redirect to="/login" />;
   }
 
   return (

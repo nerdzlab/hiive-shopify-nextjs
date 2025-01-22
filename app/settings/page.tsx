@@ -37,7 +37,7 @@ function SettingsPage() {
     open(!!selectedTabIndex ? SETTINGS : ACCOUNT, "_self");
   }, []);
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return null;
   }
 
@@ -50,13 +50,14 @@ function SettingsPage() {
       >
         {selectedTab === "account" && (
           <AccountSection
-            declineReason={data.declineReason}
-            brandEmail={data.email}
-            brandLogoUrl={data.brandLogoUrl}
-            approveStatus={data.approvalStatus}
+            hasUser={!!data}
+            declineReason={data?.declineReason}
+            brandEmail={data?.email}
+            brandLogoUrl={data?.brandLogoUrl}
+            approveStatus={data?.approvalStatus}
           />
         )}
-        {selectedTab === "settings" && <SettingsSection />}
+        {selectedTab === "settings" && <SettingsSection hasUser={!!data} />}
       </Tabs>
       <Footer />
     </Page>
