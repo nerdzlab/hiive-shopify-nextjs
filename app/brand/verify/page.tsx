@@ -72,11 +72,12 @@ const validationSchema = yup.object().shape({
   logo: yup
     .mixed()
     .required("VALIDATION_FIELD_REQUIRED")
-    .test(
-      "is-valid-size",
-      "Max allowed size is 10MB",
-      (value: any) => value && value.size <= MAX_FILE_SIZE,
-    ),
+    .test("is-valid-size", "Max allowed size is 10MB", (value: any) => {
+      if (typeof value === "string") {
+        return true;
+      }
+      return value && value.size <= MAX_FILE_SIZE;
+    }),
 });
 
 const controller = new AbortController();
